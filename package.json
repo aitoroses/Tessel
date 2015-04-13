@@ -1,0 +1,29 @@
+{
+  "name": "tessel",
+  "version": "0.0.0",
+  "description": "",
+  "main": "src",
+  "scripts": {
+    "build-global": "rm -rf build/global && NODE_ENV=production webpack src/index.js build/global/Tessel.js && NODE_ENV=production COMPRESS=1 webpack modules/index.js build/global/Tessel.min.js && echo \"gzipped, the global build is `gzip -c build/global/Tessel.min.js | wc -c` bytes\"",
+    "test": "karma start"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^5.1.4",
+    "babel-loader": "^5.0.0",
+    "expect": "^1.6.0",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.10",
+    "karma-sourcemap-loader": "^0.3.4",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.2.4",
+    "webpack": "^1.8.4",
+    "webpack-dev-server": "^1.8.0"
+  },
+  "dependencies": {
+    "object-assign": "^2.0.0"
+  }
+}
