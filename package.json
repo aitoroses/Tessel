@@ -4,7 +4,7 @@
   "description": "",
   "main": "src",
   "scripts": {
-    "build-global": "rm -rf build/global && NODE_ENV=production webpack src/index.js build/global/Tessel.js && NODE_ENV=production COMPRESS=1 webpack modules/index.js build/global/Tessel.min.js && echo \"gzipped, the global build is `gzip -c build/global/Tessel.min.js | wc -c` bytes\"",
+    "build-global": "rm -rf build/global && NODE_ENV=production webpack src/index.js build/global/Tessel.js && NODE_ENV=production COMPRESS=1 webpack src/index.js build/global/Tessel.min.js && echo \"gzipped, the global build is `gzip -c build/global/Tessel.min.js | wc -c` bytes\"",
     "test": "karma start"
   },
   "author": "",
@@ -24,6 +24,8 @@
     "webpack-dev-server": "^1.8.0"
   },
   "dependencies": {
+    "immutable": "^3.7.2",
+    "lodash": "^3.6.0",
     "object-assign": "^2.0.0"
   }
 }
