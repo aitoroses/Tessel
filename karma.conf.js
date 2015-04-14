@@ -1,4 +1,6 @@
 var webpack = require('webpack');
+var path = require('path');
+
 
 module.exports = function (config) {
   config.set({
@@ -32,7 +34,11 @@ module.exports = function (config) {
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify('test')
         })
-      ]
+      ],
+      resolve: {
+          root: [path.resolve("node_modules")],
+          extensions: ['', '.js', '.jsx',],
+      }
     },
 
     webpackServer: {

@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path');
 
 var plugins = [
   new webpack.DefinePlugin({
@@ -40,6 +41,11 @@ module.exports = {
     loaders: [
       { test: /\.js$/, loader: 'babel-loader' }
     ]
+  },
+
+  resolve: {
+    root: [path.resolve("node_modules")],
+    extensions: ['', '.js', '.jsx',]
   },
 
   node: {
