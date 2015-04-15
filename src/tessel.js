@@ -7,11 +7,11 @@ import Freezer from 'freezer-js';
  */
 class Tessel {
 
-  constructor() {
+  constructor(data) {
 
     // Data holder instances
     var reactiveVar = this._reactiveVar = new ReactiveVar();
-    var store = this._store = new Freezer({});
+    var store = this._store = new Freezer(data || {});
 
     // Setup in the reactive variable the correct value
     reactiveVar.set( store.get() );
