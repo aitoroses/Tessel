@@ -1,4 +1,5 @@
 import ReactiveVar from '../lib/reactive-var';
+import Tracker from '../lib/tracker';
 import Freezer from 'freezer-js';
 
 /**
@@ -6,6 +7,12 @@ import Freezer from 'freezer-js';
  * pointed by cursors.
  */
 class Tessel {
+
+  static Tracker = Tracker;
+
+  static autorun() {
+    Tracker.autorun.apply(this, arguments);
+  }
 
   constructor(data) {
 

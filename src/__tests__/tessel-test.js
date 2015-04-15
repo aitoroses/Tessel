@@ -1,6 +1,38 @@
 import expect from 'expect';
 import Tessel from '../tessel';
 import Tracker from '../../lib/tracker'
+import ReactiveVar from '../../lib/reactive-var';
+
+describe('Tessel class', () => {
+
+  it('should have a property to access tracker', () => {
+    var Tracker = Tessel.Tracker
+    expect(Tracker._computations).toNotBe(undefined);
+  })
+
+  it('should have a method for calling autorun (tracker)', (done) => {
+    var autorun = 0;
+    var a = new ReactiveVar("hello");
+
+    var value = a.get();
+    expect(value).toBe("hello")
+
+    Tessel.autorun(() => {
+      // will run the first time
+      value = a.get();
+      if (autorun == 1) {
+        // Check if data was modified
+        expect(value).toBe("world");
+        done()
+      }
+      // Increase the call count
+      autorun++;
+    });
+
+    // Change the reactive var
+    a.set("world")
+  })
+});
 
 describe('A new Tessel instance', () => {
 
@@ -91,10 +123,10 @@ describe('A new Tessel instance', () => {
       // Get data from the store reactively
       var autorun = 0
       var data;
-      Tracker.autorun(() => {
+      Tessel.autorun(() => {
         // Run the first time
         data = store.get();
-        if (autorun > 0) {
+        if (autorun == 1) {
           // Check if data was modified
           expect(data.a).toBe("modified");
           done()
