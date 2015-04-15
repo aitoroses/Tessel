@@ -8,7 +8,7 @@
     "test": "karma start"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^5.1.4",
     "babel-loader": "^5.0.0",
