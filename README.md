@@ -34,7 +34,6 @@ We create a simple data holder
 class MyControllerComponent extends React.Component {
 
   state = {
-    value: null,
     cursor: null
   }
 
@@ -51,7 +50,7 @@ class MyControllerComponent extends React.Component {
   
   render() {
     return (
-      <ListComponent listCursor={cursor.options} /> 
+      <ListComponent listCursor={this.state.cursor.options} /> 
     )
   }
 }
@@ -67,12 +66,8 @@ Main component passes a Tessel cursor to the list component
  */
 class ListComponent extends React.Component {
 
- static propTypes = {
-    listCursor: React.PropTypes.object.isRequired
- }
-
-  state = {
-    value: null
+  static propTypes = {
+    listCursor: React.PropTypes.array.isRequired
   }
   
   /**
@@ -82,15 +77,16 @@ class ListComponent extends React.Component {
    * and autorun will run again and get a new cursor.
    */
   _handleAdd() {
-    this.props.listCursor.push(this.state.value);
+    var node = React.findDOMNode(this.refs.input);
+    this.props.listCursor.push(node.value);
   }
  
   render() {
     return (
       <ul>
-        {this.props.list.map( el => <li>{el}</li> )}
+        {this.props.listCursor.map( el => <li>{el}</li> )}
       </ul>
-      <input value={this.state.value}}>
+      <input ref="input">
       <button onClick={this._handleAdd.bind(this)}>Add</button>
     )
   }
