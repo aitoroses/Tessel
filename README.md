@@ -1,3 +1,5 @@
+![](https://travis-ci.org/aitoroses/Tessel.svg?branch=master)
+
 # Tessel
 
 > Mix functional reactive programming with immutable cursors for handling application state. 
