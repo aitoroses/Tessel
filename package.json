@@ -5,7 +5,7 @@
   "main": "src",
   "scripts": {
     "build-global": "rm -rf build/global && NODE_ENV=production webpack src/index.js build/global/tessel.js && NODE_ENV=production COMPRESS=1 webpack src/index.js build/global/tessel.min.js && echo \"gzipped, the global build is `gzip -c build/global/tessel.min.js | wc -c` bytes\"",
-    "test": "karma start"
+    "test": "./node_modules/.bin/karma start"
   },
   "author": "",
   "license": "MIT",
