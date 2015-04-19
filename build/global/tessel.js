@@ -86,6 +86,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Freezer2 = _interopRequireWildcard(_Freezer);
 
+	function createHolder(data) {
+
+	  var value = { data: data || {} };
+
+	  // Data holder instances
+	  var reactiveVar = new _ReactiveVar2['default']();
+	  var store = new _Freezer2['default'](value);
+
+	  // Setup in the reactive variable the correct value
+	  reactiveVar.set(store.get().data);
+
+	  // Setup listener for when the store updates
+	  store.on('update', function () {
+	    // This will trigger tracker autorun
+	    reactiveVar.set(store.get().data);
+	  });
+
+	  return [reactiveVar, store];
+	}
+
 	/**
 	 * Tessel abstracts tracker reactivity and uses immutable datastructures
 	 * pointed by cursors.
@@ -93,31 +113,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Tessel = (function () {
 	  function Tessel(data) {
+	    var _this = this;
+
 	    _classCallCheck(this, Tessel);
 
-	    // Data holder instances
-	    var reactiveVar = this._reactiveVar = new _ReactiveVar2['default']();
-	    var store = this._store = new _Freezer2['default'](data || {});
-
-	    // Setup in the reactive variable the correct value
-	    reactiveVar.set(store.get());
-
-	    // Setup listener for when the store updates
-	    store.on('update', function () {
-	      // This will trigger tracker autorun
-	      reactiveVar.set(store.get());
+	    this._internal = createHolder(data);
+	    this.deferredRun = Tessel.deferredRun.bind(this);
+	    Object.defineProperty(this, 'internalData', {
+	      get: function get() {
+	        return _this._internal[1].get().data;
+	      },
+	      set: function set(data) {
+	        return _this._internal[1].get().data.reset(data);
+	      }
 	    });
 	  }
 
 	  _createClass(Tessel, [{
 	    key: 'set',
 	    value: function set(data) {
-	      this._store.set(data);
+	      this.internalData = data;
 	    }
 	  }, {
 	    key: 'get',
-	    value: function get(key) {
-	      return this._reactiveVar.get();
+	    value: function get() {
+	      return this._internal[0].get();
+	    }
+	  }, {
+	    key: 'dehydrate',
+	    value: function dehydrate() {
+	      return JSON.stringify(this.internalData);
+	    }
+	  }, {
+	    key: 'rehydrate',
+	    value: function rehydrate(data) {
+	      this.internalData = JSON.parse(data);
 	    }
 	  }], [{
 	    key: 'Tracker',
@@ -127,6 +157,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'autorun',
 	    value: function autorun() {
 	      _Tracker2['default'].autorun.apply(this, arguments);
+	    }
+	  }, {
+	    key: 'createVar',
+	    value: function createVar(initialValue) {
+	      return new _ReactiveVar2['default'](initialValue);
+	    }
+	  }, {
+	    key: 'deferredRun',
+	    value: function deferredRun() {
+	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	      }
+
+	      var reactive, cb;
+	      if (args.length == 2) {
+	        reactive = args[0];
+	        cb = args[1];
+	      } else {
+	        reactive = this._internal[0];
+	        cb = args[0];
+	      }
+	      var autorun = 0;
+	      Tessel.autorun(function () {
+	        var val = reactive.get();
+	        if (autorun > 0) {
+	          cb(val);
+	        } else {
+	          autorun++;
+	        }
+	      });
 	    }
 	  }]);
 
