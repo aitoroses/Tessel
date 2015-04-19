@@ -3,41 +3,14 @@ import Tessel from '../tessel';
 import Tracker from '../../lib/tracker'
 import ReactiveVar from '../../lib/reactive-var';
 
-describe('Tessel class', () => {
-
-  it('should have a property to access tracker', () => {
-    var Tracker = Tessel.Tracker
-    expect(Tracker._computations).toNotBe(undefined);
-  })
-
-  it('should have a method for calling autorun (tracker)', (done) => {
-    var autorun = 0;
-    var a = new ReactiveVar("hello");
-
-    var value = a.get();
-    expect(value).toBe("hello")
-
-    Tessel.autorun(() => {
-      // will run the first time
-      value = a.get();
-      if (autorun == 1) {
-        // Check if data was modified
-        expect(value).toBe("world");
-        done()
-      }
-      // Increase the call count
-      autorun++;
-    });
-
-    // Change the reactive var
-    a.set("world")
-  })
-});
+var testData = {
+  a: 'b',
+  c: ['d', 'hello']
+};
 
 describe('A new Tessel instance', () => {
 
   describe('without any data', () => {
-
 
     var store;
     beforeEach(() => {
@@ -67,14 +40,35 @@ describe('A new Tessel instance', () => {
       })
     });
 
+    it('should reset', (done) => {
+      var data = { list: [0,1,2,3,4] }
+      store.set(data);
+      setTimeout(() => {
+        expect(store.get().list[2]).toBe(2);
+        done()
+      });
+    });
+
+    it('#dehydrate', () => {
+      expect(store.dehydrate()).toBe("{}");
+    });
+
+    it('#rehydrate', (done) => {
+      store.rehydrate('{"hello": "world"}');
+      expect(store.internalData.hello).toBe("world");
+      expect(store.get().hello).toBe(undefined);
+      expect(store.dehydrate()).toBe(JSON.stringify({hello: "world"}));
+
+      // Reactivity check
+      store.deferredRun(() => {
+        expect(store.get().hello).toBe("world");
+        done()
+      });
+    });
+
   });
 
   describe('with data', () => {
-
-    var testData = {
-      a: 'b',
-      c: ['d', 'hello']
-    };
 
     var store;
     beforeEach(() => {
@@ -103,6 +97,32 @@ describe('A new Tessel instance', () => {
         expect(data.c[2]).toBe("goodbye");
         done();
       })
+    });
+
+    it('should reset', (done) => {
+      var data = { list: [0,1,2,3,4] }
+      store.set(data);
+      setTimeout(() => {
+        expect(store.get().list[2]).toBe(2);
+        done()
+      });
+    });
+
+    it('#dehydrate', () => {
+      expect(store.dehydrate()).toBe(JSON.stringify(testData));
+    });
+
+    it('#rehydrate', (done) => {
+      store.rehydrate('{"hello": "world"}');
+      expect(store.internalData.hello).toBe("world");
+      expect(store.get().hello).toBe(undefined);
+      expect(store.dehydrate()).toBe(JSON.stringify({hello: "world"}));
+
+      // Reactivity check
+      store.deferredRun(() => {
+        expect(store.get().hello).toBe("world");
+        done()
+      });
     });
   });
 
