@@ -60,7 +60,8 @@ describe('React Mixin', () => {
    */
 
   it('Should provide state to component', () => {
-    var state = JSON.parse(rendered.innerText);
+    var r = rendered;
+    var state = JSON.parse(rendered.innerHTML);
     expect(state.list.length).toBe(3);
     expect(state.mixedState).toBe(true);
     expect(state.hash.hello).toBe("world");
@@ -77,7 +78,7 @@ describe('React Mixin', () => {
       expect(val.hash.hello).toBe("goodbye");
       comp.stop();
       // Validate the component state
-      expect(rendered.innerText).toMatch(/goodbye/);
+      expect(rendered.innerHTML).toMatch(/goodbye/);
       done();
     });
   });

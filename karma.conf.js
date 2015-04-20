@@ -24,7 +24,7 @@ module.exports = function (config) {
     reporters: [ 'dots' ],
 
     webpack: {
-      devtool: 'inline-source-map',
+      devtool: '#inline-source-map',
       module: {
         loaders: [
           { test: /\.(js|jsx)$/, loader: 'babel-loader?stage=0', exclude: /node_modules/ }
