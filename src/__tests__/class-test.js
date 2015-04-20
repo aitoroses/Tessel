@@ -44,4 +44,14 @@ describe('Tessel class', () => {
     // Change the reactive var
     a.set("world")
   })
+
+  it('should be able to clean all active computations', () => {
+    Tessel.flush();
+    expect(Object.keys(Tracker._computations).length).toBe(0)
+    Tessel.autorun(() => {});
+    Tessel.autorun(() => {});
+    expect(Object.keys(Tracker._computations).length).toBe(2);
+    Tessel.flush();
+    expect(Object.keys(Tracker._computations).length).toBe(0);
+  })
 });
