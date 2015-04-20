@@ -86,6 +86,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Freezer2 = _interopRequireWildcard(_Freezer);
 
+	/**
+	 * this function creates a pair reactive-frozen
+	 * that will be kept in sync when the immutable tree
+	 * is updated
+	 */
 	function createHolder(data) {
 
 	  var value = { data: data || {} };
@@ -112,6 +117,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var Tessel = (function () {
+
+	  /**
+	   * @constructor
+	   * Creates a Freezer store and synchronizes it with a reactive
+	   * variable so it can work with tracker
+	   */
+
 	  function Tessel(data) {
 	    var _this = this;
 
@@ -130,22 +142,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(Tessel, [{
+	    key: 'mixin',
+
+	    /**
+	     * Generates a mixin to be used with react that provides
+	     * initial state and creates a computation to mantain the sync
+	     */
+	    get: function () {
+	      var self = this;
+	      var mixin = {
+	        getInitialState: function getInitialState() {
+	          return self.get();
+	        },
+	        componentDidMount: function componentDidMount() {
+	          var _this2 = this;
+
+	          // Initialize the computations
+	          var computations = this._computations = this._computations || [];
+	          var computation = Tessel.autorun(function () {
+	            _this2.setState(self.get());
+	          });
+	          computations.push(computation);
+	        },
+	        componentWillUnmount: function componentWillUnmount() {
+	          this._computations.forEach(function (c) {
+	            return c.stop();
+	          });
+	        }
+	      };
+	      return mixin;
+	    }
+	  }, {
 	    key: 'set',
+
+	    /**
+	     * Sets the store data
+	     */
 	    value: function set(data) {
 	      this.internalData = data;
 	    }
 	  }, {
 	    key: 'get',
+
+	    /**
+	     * Obtains the stored data but using the reactive variable
+	     */
 	    value: function get() {
 	      return this._internal[0].get();
 	    }
 	  }, {
 	    key: 'dehydrate',
+
+	    /**
+	     * Dehydrates the current state
+	     */
 	    value: function dehydrate() {
 	      return JSON.stringify(this.internalData);
 	    }
 	  }, {
 	    key: 'rehydrate',
+
+	    /**
+	     * Rehydrates the state invalidating the current computations
+	     * this way we can recover the aplication state.
+	     */
 	    value: function rehydrate(data) {
 	      this.internalData = JSON.parse(data);
 	    }
@@ -155,16 +215,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    enumerable: true
 	  }, {
 	    key: 'autorun',
+
+	    /**
+	     * Same as Trackers autorun, creates a computation
+	     */
 	    value: function autorun() {
-	      _Tracker2['default'].autorun.apply(this, arguments);
+	      return _Tracker2['default'].autorun.apply(this, arguments);
 	    }
 	  }, {
 	    key: 'createVar',
+
+	    /**
+	     * Creates a reactive var that when calls it's get method
+	     * inside a computation, the computation will run again
+	     */
 	    value: function createVar(initialValue) {
 	      return new _ReactiveVar2['default'](initialValue);
 	    }
 	  }, {
 	    key: 'deferredRun',
+
+	    /**
+	     * This function creates a computation that will call a callback
+	     * when the reactive variable changes for the firstime an so on
+	     */
 	    value: function deferredRun() {
 	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 	        args[_key] = arguments[_key];
@@ -178,14 +252,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	        reactive = this._internal[0];
 	        cb = args[0];
 	      }
+	      // Once executed the first time, call the callback
 	      var autorun = 0;
-	      Tessel.autorun(function () {
+	      var computation = Tessel.autorun(function () {
 	        var val = reactive.get();
 	        if (autorun > 0) {
 	          cb(val);
 	        } else {
 	          autorun++;
 	        }
+	      });
+	      return computation;
+	    }
+	  }, {
+	    key: 'flush',
+
+	    /**
+	     * Stop all the current computations
+	     */
+	    value: function flush() {
+	      Object.keys(_Tracker2['default']._computations).forEach(function (c) {
+	        return _Tracker2['default']._computations[c].stop();
 	      });
 	    }
 	  }]);
