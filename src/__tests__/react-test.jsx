@@ -89,3 +89,52 @@ describe('React Mixin', () => {
     expect(Object.keys(Tracker._computations).length).toBe(0);
   });
 });
+
+describe('React Component', () => {
+
+  before(() => {
+    // Clean other tests computations
+    Tessel.flush();
+  });
+
+  var rendered, div, component;
+
+  // Render the component on each test
+  beforeEach(() => {
+
+    tessel = new Tessel(testData);
+
+    class TesselComponentScoped extends tessel.Component {
+
+      state = {mixedState: true}
+
+      render() {
+        return (
+          <div className="tessel-component">{JSON.stringify(this.state)}</div>
+        )
+      }
+    }
+    TesselComponent = TesselComponentScoped;
+
+    // Create a placeholder
+    div = document.createElement("div");
+
+    // Render the component
+    component = React.render(<TesselComponent/>, div);
+    rendered = div.children[0];
+
+  });
+
+  // Unmount the component on each test
+  afterEach(() => {
+    React.unmountComponentAtNode(div);
+  });
+
+  it('Should provide state to component', () => {
+    var r = rendered;
+    var state = JSON.parse(rendered.innerHTML);
+    expect(state.list.length).toBe(3);
+    expect(state.mixedState).toBe(true);
+    expect(state.hash.hello).toBe("world");
+  });
+})

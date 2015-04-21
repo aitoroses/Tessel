@@ -26,14 +26,20 @@ module.exports = {
 
   externals: [
     {
-      // "react": {
-      //   root: "React",
-      //   commonjs2: "react",
-      //   commonjs: "react",
-      //   amd: "react"
-      // },
-      // "immutable": "immutable",
-      // "_": "lodash"
+      "react": {
+        root: "React",
+        commonjs2: "react",
+        commonjs: "react",
+        amd: "react"
+      },
+    },
+    {
+      "lodash": {
+        root: "_",
+        commonjs2: "lodash",
+        commonjs: "lodash",
+        amd: "lodash"
+      },
     }
   ],
 

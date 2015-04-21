@@ -2,6 +2,7 @@ import ReactiveVar from '../lib/reactive-var';
 import Tracker from '../lib/tracker';
 import Freezer from 'freezer-js';
 import tesselMixinFactory from './tessel-mixin';
+import tesselComponentFactory from './tessel-component';
 
 /**
  * this function creates a pair reactive-frozen
@@ -104,6 +105,14 @@ class Tessel {
    */
   get mixin() {
     return tesselMixinFactory.call(this);
+  }
+
+  /**
+   * Generates a component to work with ES6 classes using react-mixin
+   * and the mixin of this instance in particular
+   */
+  get Component() {
+    return tesselComponentFactory.call(this);
   }
 
   /**

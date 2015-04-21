@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("react"));
 	else if(typeof define === 'function' && define.amd)
-		define(factory);
+		define(["react"], factory);
 	else if(typeof exports === 'object')
-		exports["Tessel"] = factory();
+		exports["Tessel"] = factory(require("react"));
 	else
-		root["Tessel"] = factory();
-})(this, function() {
+		root["Tessel"] = factory(root["React"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,9 +82,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Tracker2 = _interopRequireWildcard(_Tracker);
 
-	var _Freezer = __webpack_require__(4);
+	var _Freezer = __webpack_require__(7);
 
 	var _Freezer2 = _interopRequireWildcard(_Freezer);
+
+	var _tesselMixinFactory = __webpack_require__(4);
+
+	var _tesselMixinFactory2 = _interopRequireWildcard(_tesselMixinFactory);
+
+	var _tesselComponentFactory = __webpack_require__(5);
+
+	var _tesselComponentFactory2 = _interopRequireWildcard(_tesselComponentFactory);
 
 	/**
 	 * this function creates a pair reactive-frozen
@@ -149,28 +157,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * initial state and creates a computation to mantain the sync
 	     */
 	    get: function () {
-	      var self = this;
-	      var mixin = {
-	        getInitialState: function getInitialState() {
-	          return self.get();
-	        },
-	        componentDidMount: function componentDidMount() {
-	          var _this2 = this;
+	      return _tesselMixinFactory2['default'].call(this);
+	    }
+	  }, {
+	    key: 'Component',
 
-	          // Initialize the computations
-	          var computations = this._computations = this._computations || [];
-	          var computation = Tessel.autorun(function () {
-	            _this2.setState(self.get());
-	          });
-	          computations.push(computation);
-	        },
-	        componentWillUnmount: function componentWillUnmount() {
-	          this._computations.forEach(function (c) {
-	            return c.stop();
-	          });
-	        }
-	      };
-	      return mixin;
+	    /**
+	     * Generates a component to work with ES6 classes using react-mixin
+	     * and the mixin of this instance in particular
+	     */
+	    get: function () {
+	      return _tesselComponentFactory2['default'].call(this);
 	    }
 	  }, {
 	    key: 'set',
@@ -989,8 +986,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var Freezer = __webpack_require__(5);
-	module.exports = Freezer;
+	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+	var _Tessel = __webpack_require__(1);
+
+	var _Tessel2 = _interopRequireWildcard(_Tessel);
+
+	module.exports = function tesselMixi() {
+	  var self = this;
+	  var mixin = {
+	    getInitialState: function getInitialState() {
+	      return self.get();
+	    },
+	    componentDidMount: function componentDidMount() {
+	      var _this = this;
+
+	      // Initialize the computations
+	      var computations = this._computations = this._computations || [];
+	      var computation = _Tessel2['default'].autorun(function () {
+	        _this.setState(self.get());
+	      });
+	      computations.push(computation);
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	      this._computations.forEach(function (c) {
+	        return c.stop();
+	      });
+	    }
+	  };
+	  return mixin;
+	};
 
 /***/ },
 /* 5 */
@@ -998,10 +1023,164 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var Utils = __webpack_require__(6),
-	    Emitter = __webpack_require__(7),
-	    Mixins = __webpack_require__(8),
-	    Frozen = __webpack_require__(9);
+	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+
+	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
+
+	var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+	var _React = __webpack_require__(6);
+
+	var _React2 = _interopRequireWildcard(_React);
+
+	var _Mixin = __webpack_require__(8);
+
+	module.exports = function tesselComponentFactory() {
+
+	  var componentMixin = this.mixin;
+
+	  var TesselComponent = (function (_React$Component) {
+	    function TesselComponent() {
+	      _classCallCheck(this, _TesselComponent);
+
+	      if (_React$Component != null) {
+	        _React$Component.apply(this, arguments);
+	      }
+	    }
+
+	    _inherits(TesselComponent, _React$Component);
+
+	    var _TesselComponent = TesselComponent;
+	    TesselComponent = _Mixin.decorate(componentMixin)(TesselComponent) || TesselComponent;
+	    return TesselComponent;
+	  })(_React2['default'].Component);
+
+	  return TesselComponent;
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Freezer = __webpack_require__(9);
+	module.exports = Freezer;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mixin = __webpack_require__(14);
+	var assign = __webpack_require__(15);
+
+	var mixinProto = mixin({
+	  // lifecycle stuff is as you'd expect
+	  componentDidMount: mixin.MANY,
+	  componentWillMount: mixin.MANY,
+	  componentWillReceiveProps: mixin.MANY,
+	  shouldComponentUpdate: mixin.ONCE,
+	  componentWillUpdate: mixin.MANY,
+	  componentDidUpdate: mixin.MANY,
+	  componentWillUnmount: mixin.MANY,
+	  getChildContext: mixin.MANY_MERGED
+	});
+
+	function setDefaultProps(reactMixin) {
+	  var getDefaultProps = reactMixin.getDefaultProps;
+
+	  if (getDefaultProps) {
+	    reactMixin.defaultProps = getDefaultProps();
+
+	    delete reactMixin.getDefaultProps;
+	  }
+	}
+
+	function setInitialState(reactMixin) {
+	  var getInitialState = reactMixin.getInitialState;
+	  var componentWillMount = reactMixin.componentWillMount;
+
+	  function applyInitialState(instance) {
+	    var state = instance.state || {};
+	    assign(state, getInitialState.call(instance));
+	    instance.state = state;
+	  }
+
+	  if (getInitialState) {
+	    if (!componentWillMount) {
+	      reactMixin.componentWillMount = function () {
+	        applyInitialState(this);
+	      };
+	    } else {
+	      reactMixin.componentWillMount = function () {
+	        applyInitialState(this);
+	        componentWillMount.call(this);
+	      };
+	    }
+
+	    delete reactMixin.getInitialState;
+	  }
+	}
+
+	function mixinClass(reactClass, reactMixin) {
+	  setDefaultProps(reactMixin);
+	  setInitialState(reactMixin);
+
+	  var prototypeMethods = {};
+	  var staticProps = {};
+
+	  Object.keys(reactMixin).forEach(function (key) {
+	    if (typeof reactMixin[key] === 'function') {
+	      prototypeMethods[key] = reactMixin[key];
+	    } else {
+	      staticProps[key] = reactMixin[key];
+	    }
+	  });
+
+	  mixinProto(reactClass.prototype, prototypeMethods);
+
+	  mixin({
+	    childContextTypes: mixin.MANY_MERGED_LOOSE,
+	    contextTypes: mixin.MANY_MERGED_LOOSE,
+	    propTypes: mixin.MANY_MERGED_LOOSE,
+	    defaultProps: mixin.MANY_MERGED_LOOSE
+	  })(reactClass, staticProps);
+	}
+
+	module.exports = (function () {
+	  reactMixin = mixinProto;
+
+	  reactMixin.onClass = function (reactClass, mixin) {
+	    mixinClass(reactClass, mixin);
+	  };
+
+	  reactMixin.decorate = function (mixin) {
+	    return function (reactClass) {
+	      return reactMixin.onClass(reactClass, mixin);
+	    };
+	  };
+
+	  return reactMixin;
+	})();
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Utils = __webpack_require__(10),
+	    Emitter = __webpack_require__(11),
+	    Mixins = __webpack_require__(12),
+	    Frozen = __webpack_require__(13);
 
 	//#build
 	var Freezer = function Freezer(initialValue, mutable) {
@@ -1067,7 +1246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Freezer;
 
 /***/ },
-/* 6 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1171,12 +1350,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Utils;
 
 /***/ },
-/* 7 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(6);
+	var Utils = __webpack_require__(10);
 
 	//#build
 
@@ -1250,12 +1429,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Emitter;
 
 /***/ },
-/* 8 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(6);
+	var Utils = __webpack_require__(10);
 
 	//#build
 
@@ -1401,14 +1580,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Mixins;
 
 /***/ },
-/* 9 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(6),
-	    Mixins = __webpack_require__(8),
-	    Emitter = __webpack_require__(7);
+	var Utils = __webpack_require__(10),
+	    Mixins = __webpack_require__(12),
+	    Emitter = __webpack_require__(11);
 
 	//#build
 	var Frozen = {
@@ -1923,6 +2102,224 @@ return /******/ (function(modules) { // webpackBootstrap
 	//#build
 
 	module.exports = Frozen;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var objToStr = function objToStr(x) {
+	    return Object.prototype.toString.call(x);
+	};
+
+	var thrower = function thrower(error) {
+	    throw error;
+	};
+
+	var mixins = module.exports = function makeMixinFunction(rules, _opts) {
+	    var opts = _opts || {};
+	    if (!opts.unknownFunction) {
+	        opts.unknownFunction = mixins.ONCE;
+	    }
+
+	    if (!opts.nonFunctionProperty) {
+	        opts.nonFunctionProperty = function (left, right, key) {
+	            if (left !== undefined && right !== undefined) {
+	                var getTypeName = function getTypeName(obj) {
+	                    if (obj && obj.constructor && obj.constructor.name) {
+	                        return obj.constructor.name;
+	                    } else {
+	                        return objToStr(obj).slice(8, -1);
+	                    }
+	                };
+	                throw new TypeError('Cannot mixin key ' + key + ' because it is provided by multiple sources, ' + 'and the types are ' + getTypeName(left) + ' and ' + getTypeName(right));
+	            }
+	            return left === undefined ? right : left;
+	        };
+	    }
+
+	    function setNonEnumerable(target, key, value) {
+	        if (key in target) {
+	            target[key] = value;
+	        } else {
+	            Object.defineProperty(target, key, {
+	                value: value,
+	                writable: true,
+	                configurable: true
+	            });
+	        }
+	    }
+
+	    return function applyMixin(source, mixin) {
+	        Object.keys(mixin).forEach(function (key) {
+	            var left = source[key],
+	                right = mixin[key],
+	                rule = rules[key];
+
+	            // this is just a weird case where the key was defined, but there's no value
+	            // behave like the key wasn't defined
+	            if (left === undefined && right === undefined) return;
+
+	            var wrapIfFunction = function wrapIfFunction(thing) {
+	                return typeof thing !== 'function' ? thing : function () {
+	                    return thing.call(this, arguments);
+	                };
+	            };
+
+	            // do we have a rule for this key?
+	            if (rule) {
+	                // may throw here
+	                var fn = rule(left, right, key);
+	                setNonEnumerable(source, key, wrapIfFunction(fn));
+	                return;
+	            }
+
+	            var leftIsFn = typeof left === 'function';
+	            var rightIsFn = typeof right === 'function';
+
+	            // check to see if they're some combination of functions or undefined
+	            // we already know there's no rule, so use the unknown function behavior
+	            if (leftIsFn && right === undefined || rightIsFn && left === undefined || leftIsFn && rightIsFn) {
+	                // may throw, the default is ONCE so if both are functions
+	                // the default is to throw
+	                setNonEnumerable(source, key, wrapIfFunction(opts.unknownFunction(left, right, key)));
+	                return;
+	            }
+
+	            // we have no rule for them, one may be a function but one or both aren't
+	            // our default is MANY_MERGED_LOOSE which will merge objects, concat arrays
+	            // and throw if there's a type mismatch or both are primitives (how do you merge 3, and "foo"?)
+	            source[key] = opts.nonFunctionProperty(left, right, key);
+	        });
+	    };
+	};
+
+	mixins._mergeObjects = function (obj1, obj2) {
+	    var assertObject = function assertObject(obj, obj2) {
+	        var type = objToStr(obj);
+	        if (type !== '[object Object]') {
+	            var displayType = obj.constructor ? obj.constructor.name : 'Unknown';
+	            var displayType2 = obj2.constructor ? obj2.constructor.name : 'Unknown';
+	            thrower('cannot merge returned value of type ' + displayType + ' with an ' + displayType2);
+	        }
+	    };
+
+	    if (Array.isArray(obj1) && Array.isArray(obj2)) {
+	        return obj1.concat(obj2);
+	    }
+
+	    assertObject(obj1, obj2);
+	    assertObject(obj2, obj1);
+
+	    var result = {};
+	    Object.keys(obj1).forEach(function (k) {
+	        if (Object.prototype.hasOwnProperty.call(obj2, k)) {
+	            thrower('cannot merge returns because both have the ' + JSON.stringify(k) + ' key');
+	        }
+	        result[k] = obj1[k];
+	    });
+
+	    Object.keys(obj2).forEach(function (k) {
+	        // we can skip the conflict check because all conflicts would already be found
+	        result[k] = obj2[k];
+	    });
+	    return result;
+	};
+
+	// define our built-in mixin types
+	mixins.ONCE = function (left, right, key) {
+	    if (left && right) {
+	        throw new TypeError('Cannot mixin ' + key + ' because it has a unique constraint.');
+	    }
+
+	    var fn = left || right;
+
+	    return function (args) {
+	        return fn.apply(this, args);
+	    };
+	};
+
+	mixins.MANY = function (left, right, key) {
+	    return function (args) {
+	        if (right) right.apply(this, args);
+	        return left ? left.apply(this, args) : undefined;
+	    };
+	};
+
+	mixins.MANY_MERGED_LOOSE = function (left, right, key) {
+	    if (left && right) {
+	        return mixins._mergeObjects(left, right);
+	    }
+
+	    return left || right;
+	};
+
+	mixins.MANY_MERGED = function (left, right, key) {
+	    return function (args) {
+	        var res1 = right && right.apply(this, args);
+	        var res2 = left && left.apply(this, args);
+	        if (res1 && res2) {
+	            return mixins._mergeObjects(res1, res2);
+	        }
+	        return res2 || res1;
+	    };
+	};
+
+	mixins.REDUCE_LEFT = function (_left, _right, key) {
+	    var left = _left || function () {
+	        return x;
+	    };
+	    var right = _right || function (x) {
+	        return x;
+	    };
+	    return function (args) {
+	        return right.call(this, left.apply(this, args));
+	    };
+	};
+
+	mixins.REDUCE_RIGHT = function (_left, _right, key) {
+	    var left = _left || function () {
+	        return x;
+	    };
+	    var right = _right || function (x) {
+	        return x;
+	    };
+	    return function (args) {
+	        return left.call(this, right.apply(this, args));
+	    };
+	};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function ToObject(val) {
+		if (val == null) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var keys;
+		var to = ToObject(target);
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = arguments[s];
+			keys = Object.keys(Object(from));
+
+			for (var i = 0; i < keys.length; i++) {
+				to[keys[i]] = from[keys[i]];
+			}
+		}
+
+		return to;
+	};
 
 /***/ }
 /******/ ])
