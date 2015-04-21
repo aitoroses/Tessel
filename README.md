@@ -2,13 +2,32 @@
 
 # Tessel
 
-> Mix functional reactive programming with immutable cursors for handling application state. 
+> Mix functional reactive programming with immutable cursors for handling application state.
 
-Inpspired by Meteors reactivity and `om`'s cursors, `Tessel` helps you writting stateless components in react providing a wrapper 
+> Implements a history API
+
+> Implements Flux based architecture
+
+Inpspired by Meteors reactivity and `om`'s cursors, `Tessel` helps you writting stateless components in react providing a wrapper
 over Meteors `tracker` and a library like `cortex` called [freezer](https://github.com/arqex/freezer) that provides an immutable tree data structure that is always updated from the root, even if the modification is triggered by one of the leaves, making easier to think in a reactive way.. It keeps simple how you should update your apps state and how you should
 react to changes in your applications.
 
 Making use of `tracker` we can create computations that will get invalidated when the tree has changed on the root, running again all the invalidated computations.
+
+Tessel is inspired by [fynx](https://github.com/foss-haas/fynx) idea of lightweigth Flux architecture.
+
+
+```
+╔═════════════════╗     ╔════════╗   ┌────────────┐
+║ View Components ║<────╢ Tessel ║   │ Server API │
+╚═══╤════╤════════╝     ╚════════╝   └────────────┘
+    │    │                   ^                ^
+    │    └────────────────┐  └────────────┐   │
+    v                     v               │   │
+╔═════════════════╗   ╔═════════╗     ┌───┴───┴───┐
+║ Pure Components ║   ║ Actions ║<═══>│ Listeners │
+╚═════════════════╝   ╚═════════╝     └───────────┘
+```
 
 # Installation
 Tessel is available as an NPM package
@@ -53,10 +72,10 @@ class MyControllerComponent extends React.Component {
       this.setState({cursor: AppState.get()})
     });
   }
-  
+
   render() {
     return (
-      <ListComponent listCursor={this.state.cursor.options} /> 
+      <ListComponent listCursor={this.state.cursor.options} />
     )
   }
 }
@@ -73,7 +92,7 @@ class ListComponent extends React.Component {
   static propTypes = {
     listCursor: React.PropTypes.array.isRequired
   }
-  
+
   /**
    * At this point we are not modifying the props
    * since we are using immutable data structure
@@ -84,7 +103,7 @@ class ListComponent extends React.Component {
     var node = React.findDOMNode(this.refs.input);
     this.props.listCursor.push(node.value);
   }
- 
+
   render() {
     return (
       <ul>
@@ -100,14 +119,47 @@ class ListComponent extends React.Component {
 React.render(<MyControllerComponent />, document.body);
 ```
 
-# How reactivity works
+# Using the history API
+
+Tessel stores can save, undo and redo its state of course. For example:
+
+```js
+var store = new Tessel({
+  value: "My value"
+});
+
+// Here we can save the state
+store.save();
+
+// at some point we modify it
+var contents = store.get();
+contents.set('value', "Another value");
+
+//...
+store.get() // => {value: "Another value"}
+
+// Once this happens the user could restore the previous state by doing
+store.undo();
+
+//...
+store.get() // => {value: "My value"}
+
+// Since everything it's recorded, the user may want to restore again doing
+store.redo();
+
+//...
+store.get() // => {value: "Another value"}
+```
+
+
+# How reactivity is triggered
 
 Reactivity internally works the same as Meteor:
 
 We create a Tessel instance
 
 ```js
-var state = new Tessel({
+var store = new Tessel({
   data: {
       message: "Hello World"
   }
@@ -118,6 +170,7 @@ Then we create a computation
 
 ```js
 Tessel.autorun(() => {
+  var state = store.get(); // This line should be called
   console.log(state.data.message);
 });
 
@@ -128,7 +181,7 @@ At this point if the state is modified, the computation will get invalidated and
 
 ```js
 // The change will get batched
-state.data.message = "Hello Again";
+state.data.set('message', "Hello Again");
 
 console.log(state.data.message); // => Hello World
 
@@ -136,6 +189,56 @@ console.log(state.data.message); // => Hello World
 // => Hello Again
 state.data.message == "Hello Again"; // true
 ```
+
+# Tessel Actions
+
+Tessel implements [axn](https://github.com/pluma/axn), a small-ish implementation of listenable actions or signals in JavaScript.
+
+This provides a good way of creating "Flux like actions".
+
+Actions should be used to manipulate the stores state or to communicate with the server
+
+Tessel has 2 main APIs:
+
+- Synchronous actions
+
+```js
+var actions = Tessel.createActions(["hitMe"])
+
+actions.hitMe.listen((payload) => {
+  console.log("HIT ME");
+});
+
+actions.hitMe(somePayload);
+
+// => HIT ME
+```
+
+- Asynchronous actions
+
+```js
+var actions = Tessel.createAsyncActions(["hitMe"])
+
+actions.hitMe.listen((payload) => {
+  console.log("HIT ME");
+});
+
+actions.hitMe.listen(() => anyKindOfPromise);
+
+var promise = actions.hitMe(somePayload);
+promise.then((promiseResult) => {
+  // promiseResult is the value that "anyKindOfPromise" was resolved to.
+  console.log("HIT ME AGAIN");
+});
+
+// The two listeners will be executed on cascade
+
+// => HIT ME
+// => HIT ME AGAIN
+```
+
+Asynchronous actions are good if we have a promise based **Server API** so that we
+can express our entire logic using this actions and using that API promises..
 
 # Liscense
 `Tessel` is governed under the MIT License.
