@@ -3,6 +3,7 @@ import Tracker from '../lib/tracker';
 import Freezer from 'freezer-js';
 import tesselMixinFactory from './tessel-mixin';
 import tesselComponentFactory from './tessel-component';
+import {createActions, createAsyncActions} from './tessel-actions';
 
 /**
  * this function creates a pair reactive-frozen
@@ -35,6 +36,12 @@ function createHolder(data) {
  */
 class Tessel {
 
+  static createActions = createActions;
+  static createAsyncActions = createAsyncActions;
+
+  /**
+   * Reference to tracker
+   */
   static Tracker = Tracker;
 
   /**

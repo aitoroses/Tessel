@@ -7,7 +7,7 @@
 		exports["Tessel"] = factory(require("react"));
 	else
 		root["Tessel"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_6__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_7__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Tracker2 = _interopRequireWildcard(_Tracker);
 
-	var _Freezer = __webpack_require__(7);
+	var _Freezer = __webpack_require__(8);
 
 	var _Freezer2 = _interopRequireWildcard(_Freezer);
 
@@ -93,6 +93,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _tesselComponentFactory = __webpack_require__(5);
 
 	var _tesselComponentFactory2 = _interopRequireWildcard(_tesselComponentFactory);
+
+	var _createActions$createAsyncActions = __webpack_require__(6);
 
 	/**
 	 * this function creates a pair reactive-frozen
@@ -267,7 +269,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }], [{
+	    key: 'createActions',
+	    value: _createActions$createAsyncActions.createActions,
+	    enumerable: true
+	  }, {
+	    key: 'createAsyncActions',
+	    value: _createActions$createAsyncActions.createAsyncActions,
+	    enumerable: true
+	  }, {
 	    key: 'Tracker',
+
+	    /**
+	     * Reference to tracker
+	     */
 	    value: _Tracker2['default'],
 	    enumerable: true
 	  }, {
@@ -1089,11 +1103,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
 
-	var _React = __webpack_require__(6);
+	var _React = __webpack_require__(7);
 
 	var _React2 = _interopRequireWildcard(_React);
 
-	var _Mixin = __webpack_require__(8);
+	var _Mixin = __webpack_require__(9);
 
 	module.exports = function tesselComponentFactory() {
 
@@ -1122,16 +1136,48 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.createActions = createActions;
+	exports.createAsyncActions = createAsyncActions;
+	var axn = __webpack_require__(10);
+
+	function createActions(specs) {
+	  var obj = {};
+	  if (Array.isArray(specs)) {
+	    specs.forEach(function (name) {
+	      obj[name] = axn();
+	    });
+	  } else {
+	    Object.keys(specs).forEach(function (name) {
+	      obj[name] = axn(specs[name]);
+	    });
+	  }
+	  return obj;
+	}
+
+	function createAsyncActions(specs) {
+	  var obj = {};
+	  if (Array.isArray(specs)) {
+	    specs.forEach(function (name) {
+	      obj[name] = axn.async();
+	    });
+	  } else {
+	    Object.keys(specs).forEach(function (name) {
+	      obj[name] = axn.async(specs[name]);
+	    });
+	  }
+	  return obj;
+	}
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var Freezer = __webpack_require__(9);
-	module.exports = Freezer;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
 
 /***/ },
 /* 8 */
@@ -1139,8 +1185,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var mixin = __webpack_require__(14);
-	var assign = __webpack_require__(15);
+	var Freezer = __webpack_require__(11);
+	module.exports = Freezer;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var mixin = __webpack_require__(16);
+	var assign = __webpack_require__(17);
 
 	var mixinProto = mixin({
 	  // lifecycle stuff is as you'd expect
@@ -1232,15 +1287,150 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ },
-/* 9 */
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*jshint es3: true */
+	/*global module, Promise */
+	'use strict';
+	function createAction(spec, base) {
+	  function action(data) {
+	    return action.emit(data);
+	  }
+	  action._listeners = [];
+	  if (spec) ext(action, spec);
+	  return ext(action, base);
+	}
+
+	function axn(spec) {
+	  return createAction(spec, axn.methods);
+	}
+
+	function aaxn(spec) {
+	  return ext(createAction(spec, aaxn.methods), axn.methods);
+	}
+
+	function ext(obj, src) {
+	  for (var key in src) {
+	    if (src.hasOwnProperty(key)) {
+	      if (obj.hasOwnProperty(key)) continue;
+	      obj[key] = src[key];
+	    }
+	  }
+	  return obj;
+	}
+
+	axn.methods = {
+	  _cb: function _cb(fn, ctx) {
+	    return function (data, result) {
+	      return fn.call(ctx, data, result);
+	    };
+	  },
+	  _listen: function _listen(fn, ctx, once) {
+	    var cb = this._cb(fn, ctx);
+	    this._listeners.push(cb);
+	    cb.ctx = ctx;
+	    cb.fn = fn;
+	    cb.once = once;
+	    var self = this;
+	    return function () {
+	      var i = self._listeners.indexOf(cb);
+	      if (i === -1) return false;
+	      self._listeners.splice(i, 1);
+	      return true;
+	    };
+	  },
+	  listenOnce: function listenOnce(fn, ctx) {
+	    return this._listen(fn, ctx, true);
+	  },
+	  listen: function listen(fn, ctx) {
+	    return this._listen(fn, ctx, false);
+	  },
+	  unlisten: function unlisten(fn, ctx) {
+	    for (var i = 0; i < this._listeners.length; i++) {
+	      var listener = this._listeners[i];
+	      if (listener.fn === fn && listener.ctx === ctx) {
+	        this._listeners.splice(i, 1);
+	        return true;
+	      }
+	    }
+	    return false;
+	  },
+	  shouldEmit: function shouldEmit() {
+	    return true;
+	  },
+	  beforeEmit: function beforeEmit(data) {
+	    return data;
+	  },
+	  _beforeEmit: function _beforeEmit(data) {
+	    return data;
+	  },
+	  _afterEmit: function _afterEmit(result /*, data */) {
+	    return result;
+	  },
+	  emit: function emit(data) {
+	    data = this.beforeEmit(data);
+	    var initial = this._beforeEmit(data);
+	    var result = initial;
+	    if (!this.shouldEmit(data)) {
+	      return result;
+	    }for (var i = 0; i < this._listeners.length; i++) {
+	      var listener = this._listeners[i];
+	      result = listener(data, result, initial);
+	      if (listener.once) {
+	        this._listeners.splice(i, 1);
+	        i -= 1;
+	      }
+	    }
+	    result = this._afterEmit(result, initial);
+	    return result;
+	  }
+	};
+
+	aaxn.methods = {
+	  _cb: function _cb(fn, ctx) {
+	    return function (data, p, p0) {
+	      return p.then(function (result) {
+	        if (p0._cancelled) return Promise.reject(new Error('rejected'));
+	        return fn.call(ctx, data, result);
+	      });
+	    };
+	  },
+	  _beforeEmit: function _beforeEmit(data) {
+	    return ext(Promise.resolve(data), {
+	      _cancelled: false
+	    });
+	  },
+	  _afterEmit: function _afterEmit(p, p0) {
+	    return ext(p.then(function (value) {
+	      if (p0._cancelled) return Promise.reject(new Error('rejected'));
+	      return value;
+	    }), {
+	      cancel: function cancel() {
+	        p0._cancelled = true;
+	      },
+	      cancelled: function cancelled() {
+	        return p0._cancelled;
+	      }
+	    });
+	  }
+	};
+
+	axn.async = aaxn;
+
+	module.exports = axn;
+	/* data */
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(10),
-	    Emitter = __webpack_require__(11),
-	    Mixins = __webpack_require__(12),
-	    Frozen = __webpack_require__(13);
+	var Utils = __webpack_require__(12),
+	    Emitter = __webpack_require__(13),
+	    Mixins = __webpack_require__(14),
+	    Frozen = __webpack_require__(15);
 
 	//#build
 	var Freezer = function Freezer(initialValue, mutable) {
@@ -1306,7 +1496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Freezer;
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1410,12 +1600,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Utils;
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(10);
+	var Utils = __webpack_require__(12);
 
 	//#build
 
@@ -1489,12 +1679,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Emitter;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(10);
+	var Utils = __webpack_require__(12);
 
 	//#build
 
@@ -1640,14 +1830,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Mixins;
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Utils = __webpack_require__(10),
-	    Mixins = __webpack_require__(12),
-	    Emitter = __webpack_require__(11);
+	var Utils = __webpack_require__(12),
+	    Mixins = __webpack_require__(14),
+	    Emitter = __webpack_require__(13);
 
 	//#build
 	var Frozen = {
@@ -2164,7 +2354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Frozen;
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2351,7 +2541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
