@@ -65,7 +65,34 @@ describe('Tessel Actions', () => {
       setTimeout(function() {
         expect(spy).toHaveBeenCalled();
         done();
-      },500);
+      });
+    });
+
+    it('should work with Tessel Store', (done) => {
+
+      var spy1 = expect.createSpy(() => {});
+      var spy2 = expect.createSpy(() => {});
+
+      Tessel.deferredRun(tessel, () => {
+        expect(spy1).toHaveBeenCalled();
+        expect(spy2).toHaveBeenCalled();
+        expect(tessel.get().hash.hello).toBe("goodbye");
+        done();
+      });
+
+      // Call with listener
+      actions.hitMe.listen((data) => new Promise((resolve) => {
+        spy1();
+        tessel.get().hash.set('hello', 'goodbye');
+        resolve(tessel.internalData);
+      }));
+
+      actions.hitMe().then((tesselData) => {
+        // When al listeners finish
+        spy2();
+        expect(tesselData.hash.hello).toBe("goodbye");
+        expect(spy1).toHaveBeenCalled();
+      });
     });
   });
 });
