@@ -93,6 +93,8 @@ class Tessel {
   constructor(data) {
     this._internal = createHolder(data);
     this.deferredRun = Tessel.deferredRun.bind(this);
+    this._history = [];
+    this._historyIndex = null;
     Object.defineProperty(this, 'internalData', {
       get: () => this._internal[1].get().data,
       set: (data) => this._internal[1].get().data.reset(data)
@@ -142,6 +144,56 @@ class Tessel {
    */
   rehydrate(data) {
     this.internalData = JSON.parse(data);
+  }
+
+  /**
+   * Sets the the history state to tessel value
+   * Needs to have at least one saved value in the history
+   */
+  commit(historyIndex) {
+    if (this._history.length) {
+
+      var index = historyIndex != null && (historyIndex >= 0 && historyIndex < this._history.length) ?
+        historyIndex : this._history.length - 1;
+      // store the index
+      this._historyIndex = index;
+      var state = this._history[index];
+      // Set the state
+      this.set(state);
+    }
+  }
+
+  /**
+   * Saves the current state into history and commit it
+   */
+  save() {
+    if (this._history.length > 9){
+      this._history.shift();
+    }
+    this._history.push(this.internalData);
+    // Make the commit to setup the index and the state
+    this.commit();
+  }
+
+  /**
+   * Restores the previous state into history
+   */
+  undo() {
+    if (this._history.length && this._historyIndex >= 0){
+      this.commit(this._historyIndex - 1);
+    } else {
+      return false
+    }
+  }
+  /**
+   * Restores the previously undoed state
+   */
+  redo() {
+    if (this._history.length && this._historyIndex >= 0){
+      this.commit(this._historyIndex + 1);
+    } else {
+      return false;
+    }
   }
 }
 

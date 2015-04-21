@@ -139,6 +139,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    this._internal = createHolder(data);
 	    this.deferredRun = Tessel.deferredRun.bind(this);
+	    this._history = [];
+	    this._historyIndex = null;
 	    Object.defineProperty(this, 'internalData', {
 	      get: function get() {
 	        return _this._internal[1].get().data;
@@ -205,6 +207,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    value: function rehydrate(data) {
 	      this.internalData = JSON.parse(data);
+	    }
+	  }, {
+	    key: 'commit',
+
+	    /**
+	     * Sets the the history state to tessel value
+	     * Needs to have at least one saved value in the history
+	     */
+	    value: function commit(historyIndex) {
+	      if (this._history.length) {
+
+	        var index = historyIndex != null && (historyIndex >= 0 && historyIndex < this._history.length) ? historyIndex : this._history.length - 1;
+	        // store the index
+	        this._historyIndex = index;
+	        var state = this._history[index];
+	        // Set the state
+	        this.set(state);
+	      }
+	    }
+	  }, {
+	    key: 'save',
+
+	    /**
+	     * Saves the current state into history and commit it
+	     */
+	    value: function save() {
+	      if (this._history.length > 9) {
+	        this._history.shift();
+	      }
+	      this._history.push(this.internalData);
+	      // Make the commit to setup the index and the state
+	      this.commit();
+	    }
+	  }, {
+	    key: 'undo',
+
+	    /**
+	     * Restores the previous state into history
+	     */
+	    value: function undo() {
+	      if (this._history.length && this._historyIndex >= 0) {
+	        this.commit(this._historyIndex - 1);
+	      } else {
+	        return false;
+	      }
+	    }
+	  }, {
+	    key: 'redo',
+
+	    /**
+	     * Restores the previously undoed state
+	     */
+	    value: function redo() {
+	      if (this._history.length && this._historyIndex >= 0) {
+	        this.commit(this._historyIndex + 1);
+	      } else {
+	        return false;
+	      }
 	    }
 	  }], [{
 	    key: 'Tracker',
