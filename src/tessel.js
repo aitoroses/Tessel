@@ -1,6 +1,7 @@
 import ReactiveVar from '../lib/reactive-var';
 import Tracker from '../lib/tracker';
 import Freezer from 'freezer-js';
+import tesselMixinFactory from './tessel-mixin';
 
 /**
  * this function creates a pair reactive-frozen
@@ -102,24 +103,7 @@ class Tessel {
    * initial state and creates a computation to mantain the sync
    */
   get mixin() {
-    var self = this;
-    var mixin = {
-      getInitialState() {
-        return self.get();
-      },
-      componentDidMount() {
-        // Initialize the computations
-        var computations = this._computations = this._computations || [];
-        var computation = Tessel.autorun(() => {
-          this.setState(self.get());
-        });
-        computations.push(computation);
-      },
-      componentWillUnmount() {
-        this._computations.forEach(c => c.stop());
-      }
-    }
-    return mixin;
+    return tesselMixinFactory.call(this);
   }
 
   /**
