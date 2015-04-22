@@ -1,5 +1,5 @@
 {
-  "name": "tessel",
+  "name": "tessel-js",
   "version": "1.0.0",
   "description": "Mix functional reactive programming with immutable cursors for handling application state.",
   "repository": "https://travis-ci.org/aitoroses/Tessel",
