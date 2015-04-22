@@ -20,7 +20,7 @@ if (process.env.COMPRESS) {
 module.exports = {
 
   output: {
-    library: 'Tessel',
+    library: process.env.ROOT_NAME || 'Tessel',
     libraryTarget: 'umd'
   },
 
@@ -45,7 +45,7 @@ module.exports = {
 
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel?stage=0' }
+      { test: /\.js$/, loader: 'babel?stage=0', exclude: /node_modules/ },
     ]
   },
 
