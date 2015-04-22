@@ -51,47 +51,34 @@ describe('Tessel Actions', () => {
      * TESTS
      */
     it('should be callable and listenable', (done) => {
-      var spy = expect.createSpy(() => {}).andCall(() => {
-        expect(spy.getLastCall().arguments[0]).toBe("HITHIT");
-      });
 
       // Call with listener
       actions.hitMe.listen((data) => new Promise((resolve, reject) => {
         resolve(data + data);
       }));
 
-      actions.hitMe("HIT").then(spy);
-
-      setTimeout(function() {
-        expect(spy).toHaveBeenCalled();
+      actions.hitMe("HIT").then((data) => {
+        expect(data).toBe("HITHIT");
         done();
       });
     });
 
     it('should work with Tessel Store', (done) => {
 
-      var spy1 = expect.createSpy(() => {});
-      var spy2 = expect.createSpy(() => {});
-
       Tessel.deferredRun(tessel, () => {
-        expect(spy1).toHaveBeenCalled();
-        expect(spy2).toHaveBeenCalled();
         expect(tessel.get().hash.hello).toBe("goodbye");
         done();
       });
 
       // Call with listener
       actions.hitMe.listen((data) => new Promise((resolve) => {
-        spy1();
         tessel.get().hash.set('hello', 'goodbye');
         resolve(tessel.internalData);
       }));
 
       actions.hitMe().then((tesselData) => {
         // When al listeners finish
-        spy2();
         expect(tesselData.hash.hello).toBe("goodbye");
-        expect(spy1).toHaveBeenCalled();
       });
     });
   });

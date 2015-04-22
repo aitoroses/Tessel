@@ -1,7 +1,8 @@
 {
   "name": "tessel",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mix functional reactive programming with immutable cursors for handling application state.",
+  "repository": "https://travis-ci.org/aitoroses/Tessel",
   "main": "./build/global/tessel.js",
   "scripts": {
     "build-global": "rm -rf build/global && NODE_ENV=production webpack src/index.js build/global/tessel.js && NODE_ENV=production COMPRESS=1 webpack src/index.js build/global/tessel.min.js && echo \"gzipped, the global build is `gzip -c build/global/tessel.min.js | wc -c` bytes\"",
