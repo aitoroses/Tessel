@@ -24,7 +24,7 @@ class TestActions {
   }
 }
 
-describe.only('Tessel Store', () => {
+describe('Tessel Store', () => {
   var store, tessel, actions;
 
   beforeEach(() => {
