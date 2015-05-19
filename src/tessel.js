@@ -4,6 +4,7 @@ import Freezer from 'freezer-js';
 import tesselMixinFactory from './tessel-mixin';
 import tesselComponentFactory from './tessel-component';
 import {createActions, createAsyncActions} from './tessel-actions';
+import {createStore} from './tessel-store';
 
 /**
  * this function creates a pair reactive-frozen
@@ -107,6 +108,11 @@ class Tessel {
       set: (data) => this._internal[1].get().data.reset(data)
     })
   }
+
+  /**
+   * Each instance can bind a store
+   */
+  createStore = createStore;
 
   /**
    * Generates a mixin to be used with react that provides
