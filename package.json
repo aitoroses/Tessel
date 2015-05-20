@@ -1,6 +1,6 @@
 {
   "name": "tessel-js",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Mix functional reactive programming with immutable cursors for handling application state.",
   "repository": "https://www.github.com/aitoroses/Tessel",
   "main": "./build/global/tessel.js",
