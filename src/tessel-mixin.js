@@ -1,6 +1,6 @@
 import Tessel from './tessel';
 
-module.exports = function tesselMixi() {
+module.exports = function tesselMixin() {
   var self = this;
   var mixin = {
     getInitialState() {

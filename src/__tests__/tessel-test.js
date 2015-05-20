@@ -2,6 +2,8 @@ import expect from 'expect';
 import Tessel from '../tessel';
 import Tracker from '../../lib/tracker'
 import ReactiveVar from '../../lib/reactive-var';
+import {compress, uncompress} from '../../lib/gzip';
+
 
 var testData = {
   a: 'b',
@@ -50,14 +52,14 @@ describe('A new Tessel instance', () => {
     });
 
     it('#dehydrate', () => {
-      expect(store.dehydrate()).toBe("{}");
+      expect(uncompress(store.dehydrate())).toBe("{}");
     });
 
     it('#rehydrate', (done) => {
-      store.rehydrate('{"hello": "world"}');
+      store.rehydrate(compress('{"hello": "world"}'));
       expect(store.internalData.hello).toBe("world");
-      expect(store.get().hello).toBe(undefined);
-      expect(store.dehydrate()).toBe(JSON.stringify({hello: "world"}));
+      expect(store.get().hello).toBe("world");
+      expect(uncompress(store.dehydrate())).toBe(JSON.stringify({hello: "world"}));
 
       // Reactivity check
       store.deferredRun(() => {
@@ -109,14 +111,14 @@ describe('A new Tessel instance', () => {
     });
 
     it('#dehydrate', () => {
-      expect(store.dehydrate()).toBe(JSON.stringify(testData));
+      expect(uncompress(store.dehydrate())).toBe(JSON.stringify(testData));
     });
 
     it('#rehydrate', (done) => {
-      store.rehydrate('{"hello": "world"}');
+      store.rehydrate(compress('{"hello": "world"}'));
       expect(store.internalData.hello).toBe("world");
-      expect(store.get().hello).toBe(undefined);
-      expect(store.dehydrate()).toBe(JSON.stringify({hello: "world"}));
+      expect(store.get().hello).toBe("world");
+      expect(uncompress(store.dehydrate())).toBe(JSON.stringify({hello: "world"}));
 
       // Reactivity check
       store.deferredRun(() => {

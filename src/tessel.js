@@ -1,10 +1,12 @@
 import ReactiveVar from '../lib/reactive-var';
 import Tracker from '../lib/tracker';
+import {compress, uncompress} from '../lib/gzip';
 import Freezer from 'freezer-js';
 import tesselMixinFactory from './tessel-mixin';
 import tesselComponentFactory from './tessel-component';
 import {createActions, createAsyncActions} from './tessel-actions';
 import {createStore} from './tessel-store';
+import {TesselRecorder} from './tessel-recorder';
 
 /**
  * this function creates a pair reactive-frozen
@@ -105,7 +107,11 @@ class Tessel {
     this._historyIndex = null;
     Object.defineProperty(this, 'internalData', {
       get: () => this._internal[1].get().data,
-      set: (data) => this._internal[1].get().data.reset(data)
+      set: (data) => {
+        var updated = this._internal[1].get().data.reset(data);
+        // Set reactive value also
+        this._internal[0].set(updated);
+      }
     })
   }
 
@@ -113,6 +119,13 @@ class Tessel {
    * Each instance can bind a store
    */
   createStore = createStore;
+
+  /**
+   * Each instance can bind a store
+   */
+  createRecorder() {
+    return new TesselRecorder(this);
+  };
 
   /**
    * Generates a mixin to be used with react that provides
@@ -148,7 +161,7 @@ class Tessel {
    * Dehydrates the current state
    */
   dehydrate() {
-    return JSON.stringify(this.internalData);
+    return compress(JSON.stringify(this.internalData));
   }
 
   /**
@@ -156,7 +169,7 @@ class Tessel {
    * this way we can recover the aplication state.
    */
   rehydrate(data) {
-    this.internalData = JSON.parse(data);
+    this.internalData = JSON.parse(uncompress(data));
   }
 
   /**
