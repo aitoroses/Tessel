@@ -1,5 +1,6 @@
 import expect from 'expect';
-import React from 'react/addons';
+import React from 'react';
+import {render, unmountComponentAtNode} from 'react-dom';
 import Tessel from '../tessel';
 import {decorate as Mixin} from 'react-mixin';
 
@@ -45,14 +46,14 @@ describe('React Mixin', () => {
     div = document.createElement("div");
 
     // Render the component
-    component = React.render(<TesselComponent/>, div);
+    component = render(<TesselComponent/>, div);
     rendered = div.children[0];
 
   });
 
   // Unmount the component on each test
   afterEach(() => {
-    React.unmountComponentAtNode(div);
+    unmountComponentAtNode(div);
   });
 
   /**
@@ -120,7 +121,7 @@ describe('React Component', () => {
     div = document.createElement("div");
 
     // Render the component
-    component = React.render(<TesselComponent/>, div);
+    component = render(<TesselComponent/>, div);
     rendered = div.children[0];
 
   });

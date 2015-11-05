@@ -7,7 +7,7 @@
 		exports["Tessel"] = factory(require("react"));
 	else
 		root["Tessel"] = factory(root["React"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_10__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_18__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -64,43 +64,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 
-	var _ReactiveVar = __webpack_require__(2);
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _ReactiveVar2 = _interopRequireWildcard(_ReactiveVar);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _Tracker = __webpack_require__(3);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _Tracker2 = _interopRequireWildcard(_Tracker);
+	var _libReactiveVar = __webpack_require__(2);
 
-	var _compress$uncompress = __webpack_require__(4);
+	var _libReactiveVar2 = _interopRequireDefault(_libReactiveVar);
 
-	var _Freezer = __webpack_require__(11);
+	var _libTracker = __webpack_require__(3);
 
-	var _Freezer2 = _interopRequireWildcard(_Freezer);
+	var _libTracker2 = _interopRequireDefault(_libTracker);
 
-	var _tesselMixinFactory = __webpack_require__(5);
+	var _libGzip = __webpack_require__(4);
 
-	var _tesselMixinFactory2 = _interopRequireWildcard(_tesselMixinFactory);
+	var _freezerJs = __webpack_require__(10);
 
-	var _tesselComponentFactory = __webpack_require__(6);
+	var _freezerJs2 = _interopRequireDefault(_freezerJs);
 
-	var _tesselComponentFactory2 = _interopRequireWildcard(_tesselComponentFactory);
+	var _tesselMixin = __webpack_require__(16);
 
-	var _createActions$createAsyncActions = __webpack_require__(7);
+	var _tesselMixin2 = _interopRequireDefault(_tesselMixin);
 
-	var _createStore = __webpack_require__(8);
+	var _tesselComponent = __webpack_require__(17);
 
-	var _TesselRecorder = __webpack_require__(9);
+	var _tesselComponent2 = _interopRequireDefault(_tesselComponent);
+
+	var _tesselActions = __webpack_require__(22);
+
+	var _tesselStore = __webpack_require__(24);
+
+	var _tesselRecorder = __webpack_require__(26);
 
 	/**
 	 * this function creates a pair reactive-frozen
@@ -112,8 +112,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var value = { data: data || {} };
 
 	  // Data holder instances
-	  var reactiveVar = new _ReactiveVar2['default']();
-	  var store = new _Freezer2['default'](value);
+	  var reactiveVar = new _libReactiveVar2['default']();
+	  var store = new _freezerJs2['default'](value);
 
 	  // Setup in the reactive variable the correct value
 	  reactiveVar.set(store.get().data);
@@ -133,216 +133,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var Tessel = (function () {
-
-	  /**
-	   * @constructor
-	   * Creates a Freezer store and synchronizes it with a reactive
-	   * variable so it can work with tracker
-	   */
-
-	  function Tessel(data) {
-	    var _this = this;
-
-	    _classCallCheck(this, Tessel);
-
-	    this.createStore = _createStore.createStore;
-
-	    this._internal = createHolder(data);
-	    this.deferredRun = Tessel.deferredRun.bind(this);
-	    this._history = [];
-	    this._historyIndex = null;
-	    Object.defineProperty(this, 'internalData', {
-	      get: function get() {
-	        return _this._internal[1].get().data;
-	      },
-	      set: function set(data) {
-	        var updated = _this._internal[1].get().data.reset(data);
-	        // Set reactive value also
-	        _this._internal[0].set(updated);
-	      }
-	    });
-	  }
-
-	  _createClass(Tessel, [{
-	    key: 'createStore',
-
-	    /**
-	     * Each instance can bind a store
-	     */
-	    value: undefined,
-	    enumerable: true
-	  }, {
-	    key: 'createRecorder',
-
-	    /**
-	     * Each instance can bind a store
-	     */
-	    value: function createRecorder() {
-	      return new _TesselRecorder.TesselRecorder(this);
-	    }
-	  }, {
-	    key: 'mixin',
-
-	    /**
-	     * Generates a mixin to be used with react that provides
-	     * initial state and creates a computation to mantain the sync
-	     */
-	    get: function () {
-	      return _tesselMixinFactory2['default'].call(this);
-	    }
-	  }, {
-	    key: 'Component',
-
-	    /**
-	     * Generates a component to work with ES6 classes using react-mixin
-	     * and the mixin of this instance in particular
-	     */
-	    get: function () {
-	      return _tesselComponentFactory2['default'].call(this);
-	    }
-	  }, {
-	    key: 'set',
-
-	    /**
-	     * Sets the store data
-	     */
-	    value: function set(data) {
-	      this.internalData = data;
-	    }
-	  }, {
-	    key: 'get',
-
-	    /**
-	     * Obtains the stored data but using the reactive variable
-	     */
-	    value: function get() {
-	      return this._internal[0].get();
-	    }
-	  }, {
-	    key: 'dehydrate',
-
-	    /**
-	     * Dehydrates the current state
-	     */
-	    value: function dehydrate() {
-	      return _compress$uncompress.compress(JSON.stringify(this.internalData));
-	    }
-	  }, {
-	    key: 'rehydrate',
-
-	    /**
-	     * Rehydrates the state invalidating the current computations
-	     * this way we can recover the aplication state.
-	     */
-	    value: function rehydrate(data) {
-	      this.internalData = JSON.parse(_compress$uncompress.uncompress(data));
-	    }
-	  }, {
-	    key: 'commit',
-
-	    /**
-	     * Sets the the history state to tessel value
-	     * Needs to have at least one saved value in the history
-	     */
-	    value: function commit(historyIndex) {
-	      if (this._history.length) {
-
-	        var index = historyIndex != null && (historyIndex >= 0 && historyIndex < this._history.length) ? historyIndex : this._history.length - 1;
-	        // store the index
-	        this._historyIndex = index;
-	        var state = this._history[index];
-	        // Set the state
-	        this.set(state);
-	      }
-	    }
-	  }, {
-	    key: 'save',
-
-	    /**
-	     * Saves the current state into history and commit it
-	     */
-	    value: function save() {
-	      if (this._history.length > 9) {
-	        this._history.shift();
-	      }
-	      this._history.push(this.internalData);
-	      // Make the commit to setup the index and the state
-	      this.commit();
-	    }
-	  }, {
-	    key: 'undo',
-
-	    /**
-	     * Restores the previous state into history
-	     */
-	    value: function undo() {
-	      if (this._history.length && this._historyIndex >= 0) {
-	        this.commit(this._historyIndex - 1);
-	      } else {
-	        return false;
-	      }
-	    }
-	  }, {
-	    key: 'redo',
-
-	    /**
-	     * Restores the previously undoed state
-	     */
-	    value: function redo() {
-	      if (this._history.length && this._historyIndex >= 0) {
-	        this.commit(this._historyIndex + 1);
-	      } else {
-	        return false;
-	      }
-	    }
-	  }], [{
-	    key: 'createActions',
-	    value: _createActions$createAsyncActions.createActions,
-	    enumerable: true
-	  }, {
-	    key: 'createAsyncActions',
-	    value: _createActions$createAsyncActions.createAsyncActions,
-	    enumerable: true
-	  }, {
-	    key: 'Tracker',
-
-	    /**
-	     * Reference to tracker
-	     */
-	    value: _Tracker2['default'],
-	    enumerable: true
-	  }, {
+	  _createClass(Tessel, null, [{
 	    key: 'autorun',
 
 	    /**
 	     * Same as Trackers autorun, creates a computation
 	     */
 	    value: function autorun() {
-	      return _Tracker2['default'].autorun.apply(this, arguments);
+	      return _libTracker2['default'].autorun.apply(this, arguments);
 	    }
-	  }, {
-	    key: 'createVar',
 
 	    /**
 	     * Creates a reactive var that when calls it's get method
 	     * inside a computation, the computation will run again
 	     */
-	    value: function createVar(initialValue) {
-	      return new _ReactiveVar2['default'](initialValue);
-	    }
 	  }, {
-	    key: 'deferredRun',
+	    key: 'createVar',
+	    value: function createVar(initialValue) {
+	      return new _libReactiveVar2['default'](initialValue);
+	    }
 
 	    /**
 	     * This function creates a computation that will call a callback
 	     * when the reactive variable changes for the firstime an so on
 	     */
+	  }, {
+	    key: 'deferredRun',
 	    value: function deferredRun() {
+	      var reactive, cb;
+
 	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 	        args[_key] = arguments[_key];
 	      }
 
-	      var reactive, cb;
 	      if (args.length == 2) {
 	        reactive = args[0];
 	        cb = args[1];
@@ -362,16 +185,191 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	      return computation;
 	    }
-	  }, {
-	    key: 'flush',
 
 	    /**
 	     * Stop all the current computations
 	     */
+	  }, {
+	    key: 'flush',
 	    value: function flush() {
-	      Object.keys(_Tracker2['default']._computations).forEach(function (c) {
-	        return _Tracker2['default']._computations[c].stop();
+	      Object.keys(_libTracker2['default']._computations).forEach(function (c) {
+	        return _libTracker2['default']._computations[c].stop();
 	      });
+	    }
+
+	    /**
+	     * @constructor
+	     * Creates a Freezer store and synchronizes it with a reactive
+	     * variable so it can work with tracker
+	     */
+	  }, {
+	    key: 'createActions',
+	    value: _tesselActions.createActions,
+	    enumerable: true
+	  }, {
+	    key: 'createAsyncActions',
+	    value: _tesselActions.createAsyncActions,
+
+	    /**
+	     * Reference to tracker
+	     */
+	    enumerable: true
+	  }, {
+	    key: 'Tracker',
+	    value: _libTracker2['default'],
+	    enumerable: true
+	  }]);
+
+	  function Tessel(data) {
+	    var _this = this;
+
+	    _classCallCheck(this, Tessel);
+
+	    this.createStore = _tesselStore.createStore;
+
+	    this._internal = createHolder(data);
+	    this.deferredRun = Tessel.deferredRun.bind(this);
+	    this._history = [];
+	    this._historyIndex = null;
+	    Object.defineProperty(this, 'internalData', {
+	      get: function get() {
+	        return _this._internal[1].get().data;
+	      },
+	      set: function set(data) {
+	        var updated = _this._internal[1].get().data.reset(data);
+	        // Set reactive value also
+	        _this._internal[0].set(updated);
+	      }
+	    });
+	  }
+
+	  /**
+	   * Each instance can bind a store
+	   */
+
+	  _createClass(Tessel, [{
+	    key: 'createRecorder',
+
+	    /**
+	     * Each instance can bind a store
+	     */
+	    value: function createRecorder() {
+	      return new _tesselRecorder.TesselRecorder(this);
+	    }
+	  }, {
+	    key: 'set',
+
+	    /**
+	     * Sets the store data
+	     */
+	    value: function set(data) {
+	      this.internalData = data;
+	    }
+
+	    /**
+	     * Obtains the stored data but using the reactive variable
+	     */
+	  }, {
+	    key: 'get',
+	    value: function get() {
+	      return this._internal[0].get();
+	    }
+
+	    /**
+	     * Dehydrates the current state
+	     */
+	  }, {
+	    key: 'dehydrate',
+	    value: function dehydrate() {
+	      return (0, _libGzip.compress)(JSON.stringify(this.internalData));
+	    }
+
+	    /**
+	     * Rehydrates the state invalidating the current computations
+	     * this way we can recover the aplication state.
+	     */
+	  }, {
+	    key: 'rehydrate',
+	    value: function rehydrate(data) {
+	      this.internalData = JSON.parse((0, _libGzip.uncompress)(data));
+	    }
+
+	    /**
+	     * Sets the the history state to tessel value
+	     * Needs to have at least one saved value in the history
+	     */
+	  }, {
+	    key: 'commit',
+	    value: function commit(historyIndex) {
+	      if (this._history.length) {
+
+	        var index = historyIndex != null && historyIndex >= 0 && historyIndex < this._history.length ? historyIndex : this._history.length - 1;
+	        // store the index
+	        this._historyIndex = index;
+	        var state = this._history[index];
+	        // Set the state
+	        this.set(state);
+	      }
+	    }
+
+	    /**
+	     * Saves the current state into history and commit it
+	     */
+	  }, {
+	    key: 'save',
+	    value: function save() {
+	      if (this._history.length > 9) {
+	        this._history.shift();
+	      }
+	      this._history.push(this.internalData);
+	      // Make the commit to setup the index and the state
+	      this.commit();
+	    }
+
+	    /**
+	     * Restores the previous state into history
+	     */
+	  }, {
+	    key: 'undo',
+	    value: function undo() {
+	      if (this._history.length && this._historyIndex >= 0) {
+	        this.commit(this._historyIndex - 1);
+	      } else {
+	        return false;
+	      }
+	    }
+
+	    /**
+	     * Restores the previously undoed state
+	     */
+	  }, {
+	    key: 'redo',
+	    value: function redo() {
+	      if (this._history.length && this._historyIndex >= 0) {
+	        this.commit(this._historyIndex + 1);
+	      } else {
+	        return false;
+	      }
+	    }
+	  }, {
+	    key: 'mixin',
+
+	    /**
+	     * Generates a mixin to be used with react that provides
+	     * initial state and creates a computation to mantain the sync
+	     */
+	    get: function get() {
+	      return _tesselMixin2['default'].call(this);
+	    }
+
+	    /**
+	     * Generates a component to work with ES6 classes using react-mixin
+	     * and the mixin of this instance in particular
+	     */
+	  }, {
+	    key: 'Component',
+	    get: function get() {
+	      return _tesselComponent2['default'].call(this);
 	    }
 	  }]);
 
@@ -387,15 +385,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 
-	var _Tracker = __webpack_require__(3);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _Tracker2 = _interopRequireWildcard(_Tracker);
+	var _tracker = __webpack_require__(3);
+
+	var _tracker2 = _interopRequireDefault(_tracker);
 
 	/*
 	 * ## [new] ReactiveVar(initialValue, [equalsFunc])
@@ -442,7 +440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  this.curValue = initialValue;
 	  this.equalsFunc = equalsFunc;
-	  this.dep = new _Tracker2['default'].Dependency();
+	  this.dep = new _tracker2['default'].Dependency();
 	};
 
 	ReactiveVar._isEqual = function (oldValue, newValue) {
@@ -458,7 +456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @locus Client
 	 */
 	ReactiveVar.prototype.get = function () {
-	  if (_Tracker2['default'].active) this.dep.depend();
+	  if (_tracker2['default'].active) this.dep.depend();
 
 	  return this.curValue;
 	};
@@ -496,7 +494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 
@@ -598,7 +596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// no-op). This has the benefit of not adding an unnecessary stack
 	// frame on the client.
 	var withNoYieldsAllowed = function withNoYieldsAllowed(f) {
-	  if (typeof Meteor === "undefined" || Meteor.isClient) {
+	  if (typeof Meteor === 'undefined' || Meteor.isClient) {
 	    return f;
 	  } else {
 	    return function () {
@@ -728,7 +726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Tracker.Computation.prototype.onInvalidate = function (f) {
 	  var self = this;
 
-	  if (typeof f !== "function") throw new Error("onInvalidate requires a function");
+	  if (typeof f !== 'function') throw new Error("onInvalidate requires a function");
 
 	  if (self.invalidated) {
 	    Tracker.nonreactive(function () {
@@ -1017,7 +1015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Tracker.Computation}
 	 */
 	Tracker.autorun = function (f, options) {
-	  if (typeof f !== "function") throw new Error("Tracker.autorun requires a function argument");
+	  if (typeof f !== 'function') throw new Error('Tracker.autorun requires a function argument');
 
 	  options = options || {};
 
@@ -1091,17 +1089,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	exports.uncompress = uncompress;
-
-	/* Zip BASE64 + GZIP */
 	exports.compress = compress;
-
-	// export function ab2str(buf) {
-	//   return String.fromCharCode.apply(null, new Uint16Array(buf));
-	// }
-
 	exports.ab2str = ab2str;
 	exports.str2ab = str2ab;
-	var GZIP = __webpack_require__(14);
+	var GZIP = __webpack_require__(5);
 
 	function uncompress(base64) {
 	  var str, uar;
@@ -1123,11 +1114,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
+	/* Zip BASE64 + GZIP */
+
 	function compress(message) {
 	  var arraybufferEncoded = GZIP.zip(str2ab(message));
 	  var enc = btoa(ab2str(arraybufferEncoded));
 	  return enc;
 	}
+
+	// export function ab2str(buf) {
+	//   return String.fromCharCode.apply(null, new Uint16Array(buf));
+	// }
 
 	function ab2str(buf) {
 	  var str = "";
@@ -1156,687 +1153,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
-	var _Tessel = __webpack_require__(1);
-
-	var _Tessel2 = _interopRequireWildcard(_Tessel);
-
-	module.exports = function tesselMixin() {
-	  var self = this;
-	  var mixin = {
-	    getInitialState: function getInitialState() {
-	      return self.get();
-	    },
-	    componentDidMount: function componentDidMount() {
-	      var _this = this;
-
-	      // Initialize the computations
-	      var computations = this._computations = this._computations || [];
-	      var computation = _Tessel2['default'].autorun(function () {
-	        _this.setState(self.get());
-	      });
-	      computations.push(computation);
-	    },
-	    componentWillUnmount: function componentWillUnmount() {
-	      this._computations.forEach(function (c) {
-	        return c.stop();
-	      });
-	    }
-	  };
-	  return mixin;
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-	var _inherits = function (subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
-
-	var _React = __webpack_require__(10);
-
-	var _React2 = _interopRequireWildcard(_React);
-
-	var _Mixin = __webpack_require__(12);
-
-	module.exports = function tesselComponentFactory() {
-
-	  var componentMixin = this.mixin;
-
-	  var TesselComponent = (function (_React$Component) {
-	    function TesselComponent() {
-	      _classCallCheck(this, _TesselComponent);
-
-	      if (_React$Component != null) {
-	        _React$Component.apply(this, arguments);
-	      }
-	    }
-
-	    _inherits(TesselComponent, _React$Component);
-
-	    var _TesselComponent = TesselComponent;
-	    TesselComponent = _Mixin.decorate(componentMixin)(TesselComponent) || TesselComponent;
-	    return TesselComponent;
-	  })(_React2['default'].Component);
-
-	  return TesselComponent;
-	};
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.createActions = createActions;
-	exports.createAsyncActions = createAsyncActions;
-	var axn = __webpack_require__(13);
-
-	function createActions(specs) {
-	  var obj = {};
-	  if (Array.isArray(specs)) {
-	    specs.forEach(function (name) {
-	      obj[name] = axn();
-	    });
-	  } else {
-	    Object.keys(specs).forEach(function (name) {
-	      obj[name] = axn(specs[name]);
-	    });
-	  }
-	  return obj;
-	}
-
-	function createAsyncActions(specs) {
-	  var obj = {};
-	  if (Array.isArray(specs)) {
-	    specs.forEach(function (name) {
-	      obj[name] = axn.async();
-	    });
-	  } else {
-	    Object.keys(specs).forEach(function (name) {
-	      obj[name] = axn.async(specs[name]);
-	    });
-	  }
-	  return obj;
-	}
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
-	var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: key == null || typeof Symbol == 'undefined' || key.constructor !== Symbol, configurable: true, writable: true }); };
-
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	// This function needs to be implemented by Tessel Class
-	exports.createStore = createStore;
-
-	var _EventEmitter = __webpack_require__(16);
-
-	var _EventEmitter2 = _interopRequireWildcard(_EventEmitter);
-
-	var _Tessel = __webpack_require__(1);
-
-	var _Tessel2 = _interopRequireWildcard(_Tessel);
-
-	var TesselStore = (function () {
-	  function TesselStore(tessel) {
-	    _classCallCheck(this, TesselStore);
-
-	    this._emitter = new _EventEmitter2['default']();
-	    this._tessel = tessel;
-	  }
-
-	  _createClass(TesselStore, [{
-	    key: 'bindState',
-	    value: function bindState(link) {
-	      var _this = this;
-
-	      var initial = this.state;
-
-	      // Setup state property
-	      Object.defineProperty(this, 'state', {
-	        get: function get() {
-	          return _this._tessel.internalData[link];
-	        },
-	        set: function set(val) {
-	          if (!val) {
-	            return;
-	          }_this._lastState = _this.state;
-	          return _this._tessel.internalData.set(_defineProperty({}, link, val));
-	        }
-	      });
-
-	      // set initial state and last state
-	      this.state = initial;
-	      this._lastState = this.state;
-
-	      var self = this;
-	      // Set listener and shallowEqual of the link property
-	      self._tessel._internal[1].on('update', function () {
-	        if (self.state !== self._lastState) {
-	          self._emitter.emit('update');
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'on',
-	    value: function on() {
-	      this._emitter.on.apply(this._emitter, arguments);
-	    }
-	  }, {
-	    key: 'createActions',
-
-	    /**
-	     * Creates an Async API for manipulating its store state
-	     */
-	    value: function createActions(ActionsClass) {
-	      var self = this;
-	      // For a class, create all actions that are method of ActionClass
-	      var methods = ActionsClass.prototype;
-	      var methodNames = Object.getOwnPropertyNames(methods).filter(function (n) {
-	        return n != 'constructor';
-	      });
-	      var actions = _Tessel2['default'].createAsyncActions(methodNames);
-	      // Attach action to listener
-	      methodNames.forEach(function (a) {
-	        actions[a].listen(function (payload) {
-	          return new Promise(function () {
-	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	              args[_key] = arguments[_key];
-	            }
-
-	            methods[a].apply(self.state, [payload].concat(args));
-	          });
-	        });
-	      });
-	      return actions;
-	    }
-	  }, {
-	    key: 'getStateDescriptor',
-
-	    /**
-	     * Return it's state exportable descriptor
-	     */
-	    value: function getStateDescriptor() {
-	      var self = this;
-	      return Object.defineProperties({}, {
-	        state: {
-	          get: function () {
-	            return self.state;
-	          },
-	          set: function (val) {
-	            return self.state = val;
-	          },
-	          configurable: true,
-	          enumerable: true
-	        }
-	      });
-	    }
-	  }]);
-
-	  return TesselStore;
-	})();
-
-	function createStore(TesselStoreExtended) {
-
-	  var tesselStoreInstance = new TesselStore(this);
-
-	  function extend(obj) {
-	    Object.getOwnPropertyNames(obj).forEach(function (k) {
-	      if (k != 'constructor') {
-	        TesselStoreExtended.prototype[k] = obj[k];
-	      }
-	    });
-	  }
-
-	  extend(TesselStore.prototype);
-	  extend(tesselStoreInstance);
-
-	  var store = new TesselStoreExtended();
-
-	  return store;
-	}
-
-	;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } };
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	var _compress$uncompress = __webpack_require__(4);
-
-	var TesselRecorder = (function () {
-	  function TesselRecorder(tesselContext) {
-	    var _this = this;
-
-	    _classCallCheck(this, TesselRecorder);
-
-	    this.context = tesselContext;
-	    this.recording = false;
-	    this.stateRecords = undefined;
-
-	    this.replaying = false;
-
-	    // Add listener
-	    this.context._internal[1].on('update', function () {
-	      if (_this.recording == true) {
-	        _this.addRecord(_this.context.internalData);
-	      }
-	    });
-	  }
-
-	  _createClass(TesselRecorder, [{
-	    key: 'isRecording',
-	    value: function isRecording() {
-	      return this.recording;
-	    }
-	  }, {
-	    key: 'isReplaying',
-	    value: function isReplaying() {
-	      return this.replaying;
-	    }
-	  }, {
-	    key: 'startRecording',
-	    value: function startRecording() {
-	      console.debug('Start recording');
-	      this.recording = true;
-	      this.stateRecords = [];
-
-	      var currentTesselState = this.context.get();
-	      this.addRecord(currentTesselState);
-	    }
-	  }, {
-	    key: 'addRecord',
-	    value: function addRecord(state) {
-	      console.debug('Adding record', state);
-
-	      this.stateRecords.push({
-	        time: Date.now(),
-	        state: state
-	      });
-	    }
-	  }, {
-	    key: 'stopRecording',
-	    value: function stopRecording() {
-	      this.recording = false;
-	      // Remove listener
-	      this.context._internal[1].off('update', this._listenContext);
-	    }
-	  }, {
-	    key: 'replayStateRecord',
-	    value: function replayStateRecord(record) {
-	      this.context.set(record.state);
-	    }
-	  }, {
-	    key: 'step',
-	    value: (function (_step) {
-	      function step(_x) {
-	        return _step.apply(this, arguments);
-	      }
-
-	      step.toString = function () {
-	        return _step.toString();
-	      };
-
-	      return step;
-	    })(function (step) {
-	      this.replayStateRecord(this.stateRecords[step]);
-	    })
-	  }, {
-	    key: 'replay',
-	    value: function replay(speedFactor) {
-	      if (!this.stateRecords || this.stateRecords.length < 1) {
-	        console.error('At least 2 records are needed to replay');
-	        return;
-	      }
-
-	      try {
-	        this.replaying = true;
-	        var speedFactor = speedFactor || 1;
-	        var firstRecord = this.stateRecords[0];
-	        var lastRecord = this.stateRecords[this.stateRecords.length - 1];
-	        var totalRecordTime = lastRecord.time - firstRecord.time;
-
-	        var records = this.stateRecords.map(function (record) {
-	          // How much time after the beginning this record was added
-	          var startOffset = record.time - firstRecord.time;
-	          return {
-	            record: record,
-	            offset: startOffset
-	          };
-	        });
-
-	        // The current time is actually affected by the speed factor
-	        var currentReplayTime = 0;
-	        var currentRecordIndex = 0;
-	        var tickPace = 10; // TODO which value to choose?
-	        var replayInterval = setInterval((function () {
-	          this.replayStateRecord(records[currentRecordIndex].record);
-	          var hasNextRecord = records.length > currentRecordIndex + 1;
-	          // TODO create replay widget and send events to this widget
-	          if (hasNextRecord) {
-	            var nextRecord = records[currentRecordIndex + 1];
-	            var isTimeToPlayNextRecord = nextRecord.offset <= currentReplayTime;
-	            if (isTimeToPlayNextRecord) {
-	              currentRecordIndex = currentRecordIndex + 1;
-	              console.debug('Playing to next record');
-	            }
-	            currentReplayTime = currentReplayTime + tickPace * speedFactor;
-	          } else {
-	            console.debug('End of replay');
-	            clearInterval(replayInterval);
-	          }
-	        }).bind(this), tickPace);
-	      } catch (e) {
-	        console.error('Error during replay of state records', this.stateRecords, e);
-	        console.error(e.stack);
-	      } finally {
-	        this.replaying = false;
-	      }
-	    }
-	  }, {
-	    key: 'dehydrate',
-	    value: function dehydrate() {
-	      return _compress$uncompress.compress(JSON.stringify(this.stateRecords));
-	    }
-	  }, {
-	    key: 'rehydrate',
-	    value: function rehydrate(data) {
-	      this.stateRecords = JSON.parse(_compress$uncompress.uncompress(data));
-	    }
-	  }]);
-
-	  return TesselRecorder;
-	})();
-
-	exports.TesselRecorder = TesselRecorder;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Freezer = __webpack_require__(15);
-	module.exports = Freezer;
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var mixin = __webpack_require__(21);
-	var assign = __webpack_require__(22);
-
-	var mixinProto = mixin({
-	  // lifecycle stuff is as you'd expect
-	  componentDidMount: mixin.MANY,
-	  componentWillMount: mixin.MANY,
-	  componentWillReceiveProps: mixin.MANY,
-	  shouldComponentUpdate: mixin.ONCE,
-	  componentWillUpdate: mixin.MANY,
-	  componentDidUpdate: mixin.MANY,
-	  componentWillUnmount: mixin.MANY,
-	  getChildContext: mixin.MANY_MERGED
-	});
-
-	function setDefaultProps(reactMixin) {
-	  var getDefaultProps = reactMixin.getDefaultProps;
-
-	  if(getDefaultProps) {
-	    reactMixin.defaultProps = getDefaultProps();
-
-	    delete reactMixin.getDefaultProps;
-	  }
-	}
-
-	function setInitialState(reactMixin) {
-	  var getInitialState = reactMixin.getInitialState;
-	  var componentWillMount = reactMixin.componentWillMount;
-
-	  function applyInitialState(instance){
-	      var state = instance.state || {};
-	      assign(state, getInitialState.call(instance));
-	      instance.state = state;
-	  }
-
-	  if(getInitialState) {
-	    if(!componentWillMount) {
-	      reactMixin.componentWillMount = function() {
-	          applyInitialState(this);
-	      };
-	    }
-	    else {
-	      reactMixin.componentWillMount = function() {
-	        applyInitialState(this);
-	        componentWillMount.call(this);
-	      };
-	    }
-
-	    delete reactMixin.getInitialState;
-	  }
-	}
-
-	function mixinClass(reactClass, reactMixin) {
-	  setDefaultProps(reactMixin);
-	  setInitialState(reactMixin);
-
-	  var prototypeMethods = {};
-	  var staticProps = {};
-
-	  Object.keys(reactMixin).forEach(function(key) {
-	    if(typeof reactMixin[key] === 'function') {
-	      prototypeMethods[key] = reactMixin[key];
-	    }
-	    else {
-	      staticProps[key] = reactMixin[key];
-	    }
-	  });
-
-	  mixinProto(reactClass.prototype, prototypeMethods);
-
-	  mixin({
-	    childContextTypes: mixin.MANY_MERGED_LOOSE,
-	    contextTypes: mixin.MANY_MERGED_LOOSE,
-	    propTypes: mixin.MANY_MERGED_LOOSE,
-	    defaultProps: mixin.MANY_MERGED_LOOSE
-	  })(reactClass, staticProps);
-	}
-
-	module.exports = (function () {
-	  reactMixin = mixinProto;
-
-	  reactMixin.onClass = function(reactClass, mixin) {
-	    mixinClass(reactClass, mixin)
-	  };
-
-	  reactMixin.decorate = function(mixin) {
-	    return function(reactClass) {
-	      return reactMixin.onClass(reactClass, mixin);
-	    };
-	  }
-
-	  return reactMixin;
-	})();
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*jshint es3: true */
-	/*global module, Promise */
-	'use strict';
-	function createAction(spec, base) {
-	  function action(data) {
-	    return action.emit(data);
-	  }
-	  action._listeners = [];
-	  if (spec) ext(action, spec);
-	  return ext(action, base);
-	}
-
-	function axn(spec) {
-	  return createAction(spec, axn.methods);
-	}
-
-	function aaxn(spec) {
-	  return ext(createAction(spec, aaxn.methods), axn.methods);
-	}
-
-	function ext(obj, src) {
-	  for (var key in src) {
-	    if (src.hasOwnProperty(key)) {
-	      if (obj.hasOwnProperty(key)) continue;
-	      obj[key] = src[key];
-	    }
-	  }
-	  return obj;
-	}
-
-	axn.methods = {
-	  _cb: function (fn, ctx) {
-	    return function (data, result) {
-	      return fn.call(ctx, data, result);
-	    };
-	  },
-	  _listen: function (fn, ctx, once) {
-	    var cb = this._cb(fn, ctx);
-	    this._listeners.push(cb);
-	    cb.ctx = ctx;
-	    cb.fn = fn;
-	    cb.once = once;
-	    var self = this;
-	    return function () {
-	      var i = self._listeners.indexOf(cb);
-	      if (i === -1) return false;
-	      self._listeners.splice(i, 1);
-	      return true;
-	    };
-	  },
-	  listenOnce: function (fn, ctx) {
-	    return this._listen(fn, ctx, true);
-	  },
-	  listen: function (fn, ctx) {
-	    return this._listen(fn, ctx, false);
-	  },
-	  unlisten: function (fn, ctx) {
-	    for (var i = 0; i < this._listeners.length; i++) {
-	      var listener = this._listeners[i];
-	      if (listener.fn === fn && listener.ctx === ctx) {
-	        this._listeners.splice(i, 1);
-	        return true;
-	      }
-	    }
-	    return false;
-	  },
-	  shouldEmit: function (/* data */) {
-	    return true;
-	  },
-	  beforeEmit: function (data) {
-	    return data;
-	  },
-	  _beforeEmit: function (data) {
-	    return data;
-	  },
-	  _afterEmit: function (result/*, data */) {
-	    return result;
-	  },
-	  emit: function (data) {
-	    data = this.beforeEmit(data);
-	    var initial = this._beforeEmit(data);
-	    var result = initial;
-	    if (!this.shouldEmit(data)) return result;
-	    for (var i = 0; i < this._listeners.length; i++) {
-	      var listener = this._listeners[i];
-	      result = listener(data, result, initial);
-	      if (listener.once) {
-	        this._listeners.splice(i, 1);
-	        i -= 1;
-	      }
-	    }
-	    result = this._afterEmit(result, initial);
-	    return result;
-	  }
-	};
-
-	aaxn.methods = {
-	  _cb: function (fn, ctx) {
-	    return function (data, p, p0) {
-	      return p.then(function (result) {
-	        if (p0._cancelled) return Promise.reject(new Error('rejected'));
-	        return fn.call(ctx, data, result);
-	      });
-	    };
-	  },
-	  _beforeEmit: function (data) {
-	    return ext(Promise.resolve(data), {
-	      _cancelled: false
-	    });
-	  },
-	  _afterEmit: function (p, p0) {
-	    return ext(p.then(function (value) {
-	      if (p0._cancelled) return Promise.reject(new Error('rejected'));
-	      return value;
-	    }), {
-	      cancel: function () {
-	        p0._cancelled = true;
-	      },
-	      cancelled: function () {
-	        return p0._cancelled;
-	      }
-	    });
-	  }
-	};
-
-	axn.async = aaxn;
-
-	module.exports = axn;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
 	(function () {
 		'use strict';
 
-		var crc32 = __webpack_require__(24),
-			deflate = __webpack_require__(23),
+		var crc32 = __webpack_require__(6),
+			deflate = __webpack_require__(7),
 			// magic numbers marking this file as GZIP
 			ID1 = 0x1F,
 			ID2 = 0x8B,
@@ -2115,1821 +1436,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Utils = __webpack_require__( 17 ),
-		Emitter = __webpack_require__( 18 ),
-		Mixins = __webpack_require__( 19 ),
-		Frozen = __webpack_require__( 20 )
-	;
-
-	//#build
-	var Freezer = function( initialValue, mutable ) {
-		var me = this;
-
-		// Immutable data
-		var frozen;
-
-		var notify = function notify( eventName, node, options ){
-			if( eventName == 'listener' )
-				return Frozen.createListener( node );
-
-			return Frozen.update( eventName, node, options );
-		};
-
-		var freeze = function(){};
-		if( !mutable )
-			freeze = function( obj ){ Object.freeze( obj ); };
-
-		// Create the frozen object
-		frozen = Frozen.freeze( initialValue, notify, freeze );
-
-		// Listen to its changes immediately
-		var listener = frozen.getListener();
-
-		// Updating flag to trigger the event on nextTick
-		var updating = false;
-
-		listener.on( 'immediate', function( prevNode, updated ){
-			if( prevNode != frozen )
-				return;
-
-			frozen = updated;
-
-			// Trigger on next tick
-			if( !updating ){
-				updating = true;
-				Utils.nextTick( function(){
-					updating = false;
-					me.trigger( 'update', frozen );
-				});
-			}
-		});
-
-		Utils.addNE( this, {
-			get: function(){
-				return frozen;
-			},
-			set: function( node ){
-				var newNode = notify( 'reset', frozen, node );
-				newNode.__.listener.trigger( 'immediate', frozen, newNode );
-			}
-		});
-
-		Utils.addNE( this, { getData: this.get, setData: this.set } );
-
-		// The event store
-		this._events = [];
-	}
-
-	Freezer.prototype = Utils.createNonEnumerable({}, Emitter);
-	//#build
-
-	module.exports = Freezer;
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * EventEmitter2
-	 * https://github.com/hij1nx/EventEmitter2
-	 *
-	 * Copyright (c) 2013 hij1nx
-	 * Licensed under the MIT license.
-	 */
-	;!function(undefined) {
-
-	  var isArray = Array.isArray ? Array.isArray : function _isArray(obj) {
-	    return Object.prototype.toString.call(obj) === "[object Array]";
-	  };
-	  var defaultMaxListeners = 10;
-
-	  function init() {
-	    this._events = {};
-	    if (this._conf) {
-	      configure.call(this, this._conf);
-	    }
-	  }
-
-	  function configure(conf) {
-	    if (conf) {
-
-	      this._conf = conf;
-
-	      conf.delimiter && (this.delimiter = conf.delimiter);
-	      conf.maxListeners && (this._events.maxListeners = conf.maxListeners);
-	      conf.wildcard && (this.wildcard = conf.wildcard);
-	      conf.newListener && (this.newListener = conf.newListener);
-
-	      if (this.wildcard) {
-	        this.listenerTree = {};
-	      }
-	    }
-	  }
-
-	  function EventEmitter(conf) {
-	    this._events = {};
-	    this.newListener = false;
-	    configure.call(this, conf);
-	  }
-
-	  //
-	  // Attention, function return type now is array, always !
-	  // It has zero elements if no any matches found and one or more
-	  // elements (leafs) if there are matches
-	  //
-	  function searchListenerTree(handlers, type, tree, i) {
-	    if (!tree) {
-	      return [];
-	    }
-	    var listeners=[], leaf, len, branch, xTree, xxTree, isolatedBranch, endReached,
-	        typeLength = type.length, currentType = type[i], nextType = type[i+1];
-	    if (i === typeLength && tree._listeners) {
-	      //
-	      // If at the end of the event(s) list and the tree has listeners
-	      // invoke those listeners.
-	      //
-	      if (typeof tree._listeners === 'function') {
-	        handlers && handlers.push(tree._listeners);
-	        return [tree];
-	      } else {
-	        for (leaf = 0, len = tree._listeners.length; leaf < len; leaf++) {
-	          handlers && handlers.push(tree._listeners[leaf]);
-	        }
-	        return [tree];
-	      }
-	    }
-
-	    if ((currentType === '*' || currentType === '**') || tree[currentType]) {
-	      //
-	      // If the event emitted is '*' at this part
-	      // or there is a concrete match at this patch
-	      //
-	      if (currentType === '*') {
-	        for (branch in tree) {
-	          if (branch !== '_listeners' && tree.hasOwnProperty(branch)) {
-	            listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i+1));
-	          }
-	        }
-	        return listeners;
-	      } else if(currentType === '**') {
-	        endReached = (i+1 === typeLength || (i+2 === typeLength && nextType === '*'));
-	        if(endReached && tree._listeners) {
-	          // The next element has a _listeners, add it to the handlers.
-	          listeners = listeners.concat(searchListenerTree(handlers, type, tree, typeLength));
-	        }
-
-	        for (branch in tree) {
-	          if (branch !== '_listeners' && tree.hasOwnProperty(branch)) {
-	            if(branch === '*' || branch === '**') {
-	              if(tree[branch]._listeners && !endReached) {
-	                listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], typeLength));
-	              }
-	              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i));
-	            } else if(branch === nextType) {
-	              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i+2));
-	            } else {
-	              // No match on this one, shift into the tree but not in the type array.
-	              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i));
-	            }
-	          }
-	        }
-	        return listeners;
-	      }
-
-	      listeners = listeners.concat(searchListenerTree(handlers, type, tree[currentType], i+1));
-	    }
-
-	    xTree = tree['*'];
-	    if (xTree) {
-	      //
-	      // If the listener tree will allow any match for this part,
-	      // then recursively explore all branches of the tree
-	      //
-	      searchListenerTree(handlers, type, xTree, i+1);
-	    }
-
-	    xxTree = tree['**'];
-	    if(xxTree) {
-	      if(i < typeLength) {
-	        if(xxTree._listeners) {
-	          // If we have a listener on a '**', it will catch all, so add its handler.
-	          searchListenerTree(handlers, type, xxTree, typeLength);
-	        }
-
-	        // Build arrays of matching next branches and others.
-	        for(branch in xxTree) {
-	          if(branch !== '_listeners' && xxTree.hasOwnProperty(branch)) {
-	            if(branch === nextType) {
-	              // We know the next element will match, so jump twice.
-	              searchListenerTree(handlers, type, xxTree[branch], i+2);
-	            } else if(branch === currentType) {
-	              // Current node matches, move into the tree.
-	              searchListenerTree(handlers, type, xxTree[branch], i+1);
-	            } else {
-	              isolatedBranch = {};
-	              isolatedBranch[branch] = xxTree[branch];
-	              searchListenerTree(handlers, type, { '**': isolatedBranch }, i+1);
-	            }
-	          }
-	        }
-	      } else if(xxTree._listeners) {
-	        // We have reached the end and still on a '**'
-	        searchListenerTree(handlers, type, xxTree, typeLength);
-	      } else if(xxTree['*'] && xxTree['*']._listeners) {
-	        searchListenerTree(handlers, type, xxTree['*'], typeLength);
-	      }
-	    }
-
-	    return listeners;
-	  }
-
-	  function growListenerTree(type, listener) {
-
-	    type = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
-
-	    //
-	    // Looks for two consecutive '**', if so, don't add the event at all.
-	    //
-	    for(var i = 0, len = type.length; i+1 < len; i++) {
-	      if(type[i] === '**' && type[i+1] === '**') {
-	        return;
-	      }
-	    }
-
-	    var tree = this.listenerTree;
-	    var name = type.shift();
-
-	    while (name) {
-
-	      if (!tree[name]) {
-	        tree[name] = {};
-	      }
-
-	      tree = tree[name];
-
-	      if (type.length === 0) {
-
-	        if (!tree._listeners) {
-	          tree._listeners = listener;
-	        }
-	        else if(typeof tree._listeners === 'function') {
-	          tree._listeners = [tree._listeners, listener];
-	        }
-	        else if (isArray(tree._listeners)) {
-
-	          tree._listeners.push(listener);
-
-	          if (!tree._listeners.warned) {
-
-	            var m = defaultMaxListeners;
-
-	            if (typeof this._events.maxListeners !== 'undefined') {
-	              m = this._events.maxListeners;
-	            }
-
-	            if (m > 0 && tree._listeners.length > m) {
-
-	              tree._listeners.warned = true;
-	              console.error('(node) warning: possible EventEmitter memory ' +
-	                            'leak detected. %d listeners added. ' +
-	                            'Use emitter.setMaxListeners() to increase limit.',
-	                            tree._listeners.length);
-	              console.trace();
-	            }
-	          }
-	        }
-	        return true;
-	      }
-	      name = type.shift();
-	    }
-	    return true;
-	  }
-
-	  // By default EventEmitters will print a warning if more than
-	  // 10 listeners are added to it. This is a useful default which
-	  // helps finding memory leaks.
-	  //
-	  // Obviously not all Emitters should be limited to 10. This function allows
-	  // that to be increased. Set to zero for unlimited.
-
-	  EventEmitter.prototype.delimiter = '.';
-
-	  EventEmitter.prototype.setMaxListeners = function(n) {
-	    this._events || init.call(this);
-	    this._events.maxListeners = n;
-	    if (!this._conf) this._conf = {};
-	    this._conf.maxListeners = n;
-	  };
-
-	  EventEmitter.prototype.event = '';
-
-	  EventEmitter.prototype.once = function(event, fn) {
-	    this.many(event, 1, fn);
-	    return this;
-	  };
-
-	  EventEmitter.prototype.many = function(event, ttl, fn) {
-	    var self = this;
-
-	    if (typeof fn !== 'function') {
-	      throw new Error('many only accepts instances of Function');
-	    }
-
-	    function listener() {
-	      if (--ttl === 0) {
-	        self.off(event, listener);
-	      }
-	      fn.apply(this, arguments);
-	    }
-
-	    listener._origin = fn;
-
-	    this.on(event, listener);
-
-	    return self;
-	  };
-
-	  EventEmitter.prototype.emit = function() {
-
-	    this._events || init.call(this);
-
-	    var type = arguments[0];
-
-	    if (type === 'newListener' && !this.newListener) {
-	      if (!this._events.newListener) { return false; }
-	    }
-
-	    // Loop through the *_all* functions and invoke them.
-	    if (this._all) {
-	      var l = arguments.length;
-	      var args = new Array(l - 1);
-	      for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
-	      for (i = 0, l = this._all.length; i < l; i++) {
-	        this.event = type;
-	        this._all[i].apply(this, args);
-	      }
-	    }
-
-	    // If there is no 'error' event listener then throw.
-	    if (type === 'error') {
-
-	      if (!this._all &&
-	        !this._events.error &&
-	        !(this.wildcard && this.listenerTree.error)) {
-
-	        if (arguments[1] instanceof Error) {
-	          throw arguments[1]; // Unhandled 'error' event
-	        } else {
-	          throw new Error("Uncaught, unspecified 'error' event.");
-	        }
-	        return false;
-	      }
-	    }
-
-	    var handler;
-
-	    if(this.wildcard) {
-	      handler = [];
-	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
-	      searchListenerTree.call(this, handler, ns, this.listenerTree, 0);
-	    }
-	    else {
-	      handler = this._events[type];
-	    }
-
-	    if (typeof handler === 'function') {
-	      this.event = type;
-	      if (arguments.length === 1) {
-	        handler.call(this);
-	      }
-	      else if (arguments.length > 1)
-	        switch (arguments.length) {
-	          case 2:
-	            handler.call(this, arguments[1]);
-	            break;
-	          case 3:
-	            handler.call(this, arguments[1], arguments[2]);
-	            break;
-	          // slower
-	          default:
-	            var l = arguments.length;
-	            var args = new Array(l - 1);
-	            for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
-	            handler.apply(this, args);
-	        }
-	      return true;
-	    }
-	    else if (handler) {
-	      var l = arguments.length;
-	      var args = new Array(l - 1);
-	      for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
-
-	      var listeners = handler.slice();
-	      for (var i = 0, l = listeners.length; i < l; i++) {
-	        this.event = type;
-	        listeners[i].apply(this, args);
-	      }
-	      return (listeners.length > 0) || !!this._all;
-	    }
-	    else {
-	      return !!this._all;
-	    }
-
-	  };
-
-	  EventEmitter.prototype.on = function(type, listener) {
-
-	    if (typeof type === 'function') {
-	      this.onAny(type);
-	      return this;
-	    }
-
-	    if (typeof listener !== 'function') {
-	      throw new Error('on only accepts instances of Function');
-	    }
-	    this._events || init.call(this);
-
-	    // To avoid recursion in the case that type == "newListeners"! Before
-	    // adding it to the listeners, first emit "newListeners".
-	    this.emit('newListener', type, listener);
-
-	    if(this.wildcard) {
-	      growListenerTree.call(this, type, listener);
-	      return this;
-	    }
-
-	    if (!this._events[type]) {
-	      // Optimize the case of one listener. Don't need the extra array object.
-	      this._events[type] = listener;
-	    }
-	    else if(typeof this._events[type] === 'function') {
-	      // Adding the second element, need to change to array.
-	      this._events[type] = [this._events[type], listener];
-	    }
-	    else if (isArray(this._events[type])) {
-	      // If we've already got an array, just append.
-	      this._events[type].push(listener);
-
-	      // Check for listener leak
-	      if (!this._events[type].warned) {
-
-	        var m = defaultMaxListeners;
-
-	        if (typeof this._events.maxListeners !== 'undefined') {
-	          m = this._events.maxListeners;
-	        }
-
-	        if (m > 0 && this._events[type].length > m) {
-
-	          this._events[type].warned = true;
-	          console.error('(node) warning: possible EventEmitter memory ' +
-	                        'leak detected. %d listeners added. ' +
-	                        'Use emitter.setMaxListeners() to increase limit.',
-	                        this._events[type].length);
-	          console.trace();
-	        }
-	      }
-	    }
-	    return this;
-	  };
-
-	  EventEmitter.prototype.onAny = function(fn) {
-
-	    if (typeof fn !== 'function') {
-	      throw new Error('onAny only accepts instances of Function');
-	    }
-
-	    if(!this._all) {
-	      this._all = [];
-	    }
-
-	    // Add the function to the event listener collection.
-	    this._all.push(fn);
-	    return this;
-	  };
-
-	  EventEmitter.prototype.addListener = EventEmitter.prototype.on;
-
-	  EventEmitter.prototype.off = function(type, listener) {
-	    if (typeof listener !== 'function') {
-	      throw new Error('removeListener only takes instances of Function');
-	    }
-
-	    var handlers,leafs=[];
-
-	    if(this.wildcard) {
-	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
-	      leafs = searchListenerTree.call(this, null, ns, this.listenerTree, 0);
-	    }
-	    else {
-	      // does not use listeners(), so no side effect of creating _events[type]
-	      if (!this._events[type]) return this;
-	      handlers = this._events[type];
-	      leafs.push({_listeners:handlers});
-	    }
-
-	    for (var iLeaf=0; iLeaf<leafs.length; iLeaf++) {
-	      var leaf = leafs[iLeaf];
-	      handlers = leaf._listeners;
-	      if (isArray(handlers)) {
-
-	        var position = -1;
-
-	        for (var i = 0, length = handlers.length; i < length; i++) {
-	          if (handlers[i] === listener ||
-	            (handlers[i].listener && handlers[i].listener === listener) ||
-	            (handlers[i]._origin && handlers[i]._origin === listener)) {
-	            position = i;
-	            break;
-	          }
-	        }
-
-	        if (position < 0) {
-	          continue;
-	        }
-
-	        if(this.wildcard) {
-	          leaf._listeners.splice(position, 1);
-	        }
-	        else {
-	          this._events[type].splice(position, 1);
-	        }
-
-	        if (handlers.length === 0) {
-	          if(this.wildcard) {
-	            delete leaf._listeners;
-	          }
-	          else {
-	            delete this._events[type];
-	          }
-	        }
-	        return this;
-	      }
-	      else if (handlers === listener ||
-	        (handlers.listener && handlers.listener === listener) ||
-	        (handlers._origin && handlers._origin === listener)) {
-	        if(this.wildcard) {
-	          delete leaf._listeners;
-	        }
-	        else {
-	          delete this._events[type];
-	        }
-	      }
-	    }
-
-	    return this;
-	  };
-
-	  EventEmitter.prototype.offAny = function(fn) {
-	    var i = 0, l = 0, fns;
-	    if (fn && this._all && this._all.length > 0) {
-	      fns = this._all;
-	      for(i = 0, l = fns.length; i < l; i++) {
-	        if(fn === fns[i]) {
-	          fns.splice(i, 1);
-	          return this;
-	        }
-	      }
-	    } else {
-	      this._all = [];
-	    }
-	    return this;
-	  };
-
-	  EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
-
-	  EventEmitter.prototype.removeAllListeners = function(type) {
-	    if (arguments.length === 0) {
-	      !this._events || init.call(this);
-	      return this;
-	    }
-
-	    if(this.wildcard) {
-	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
-	      var leafs = searchListenerTree.call(this, null, ns, this.listenerTree, 0);
-
-	      for (var iLeaf=0; iLeaf<leafs.length; iLeaf++) {
-	        var leaf = leafs[iLeaf];
-	        leaf._listeners = null;
-	      }
-	    }
-	    else {
-	      if (!this._events[type]) return this;
-	      this._events[type] = null;
-	    }
-	    return this;
-	  };
-
-	  EventEmitter.prototype.listeners = function(type) {
-	    if(this.wildcard) {
-	      var handlers = [];
-	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
-	      searchListenerTree.call(this, handlers, ns, this.listenerTree, 0);
-	      return handlers;
-	    }
-
-	    this._events || init.call(this);
-
-	    if (!this._events[type]) this._events[type] = [];
-	    if (!isArray(this._events[type])) {
-	      this._events[type] = [this._events[type]];
-	    }
-	    return this._events[type];
-	  };
-
-	  EventEmitter.prototype.listenersAny = function() {
-
-	    if(this._all) {
-	      return this._all;
-	    }
-	    else {
-	      return [];
-	    }
-
-	  };
-
-	  if (true) {
-	     // AMD. Register as an anonymous module.
-	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
-	      return EventEmitter;
-	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	  } else if (typeof exports === 'object') {
-	    // CommonJS
-	    exports.EventEmitter2 = EventEmitter;
-	  }
-	  else {
-	    // Browser global.
-	    window.EventEmitter2 = EventEmitter;
-	  }
-	}();
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	//#build
-	var global = (new Function("return this")());
-
-	var Utils = {
-		extend: function( ob, props ){
-			for( var p in props ){
-				ob[p] = props[p];
-			}
-			return ob;
-		},
-
-		createNonEnumerable: function( obj, proto ){
-			var ne = {};
-			for( var key in obj )
-				ne[key] = {value: obj[key] };
-			return Object.create( proto || {}, ne );
-		},
-
-		error: function( message ){
-			var err = new Error( message );
-			if( console )
-				return console.error( err );
-			else
-				throw err;
-		},
-
-		each: function( o, clbk ){
-			var i,l,keys;
-			if( o && o.constructor == Array ){
-				for (i = 0, l = o.length; i < l; i++)
-					clbk( o[i], i );
-			}
-			else {
-				keys = Object.keys( o );
-				for( i = 0, l = keys.length; i < l; i++ )
-					clbk( o[ keys[i] ], keys[i] );
-			}
-		},
-
-		addNE: function( node, attrs ){
-			for( var key in attrs ){
-				Object.defineProperty( node, key, {
-					enumerable: false,
-					configurable: true,
-					writable: true,
-					value: attrs[ key ]
-				});
-			}
-		},
-
-		// nextTick - by stagas / public domain
-	  	nextTick: (function () {
-	      var queue = [],
-				dirty = false,
-				fn,
-				hasPostMessage = !!global.postMessage,
-				messageName = 'nexttick',
-				trigger = (function () {
-					return hasPostMessage
-						? function trigger () {
-						global.postMessage(messageName, '*');
-					}
-					: function trigger () {
-						setTimeout(function () { processQueue() }, 0);
-					};
-				}()),
-				processQueue = (function () {
-					return hasPostMessage
-						? function processQueue (event) {
-							if (event.source === global && event.data === messageName) {
-								event.stopPropagation();
-								flushQueue();
-							}
-						}
-						: flushQueue;
-	      	})()
-	      ;
-
-	      function flushQueue () {
-	          while (fn = queue.shift()) {
-	              fn();
-	          }
-	          dirty = false;
-	      }
-
-	      function nextTick (fn) {
-	          queue.push(fn);
-	          if (dirty) return;
-	          dirty = true;
-	          trigger();
-	      }
-
-	      if (hasPostMessage) global.addEventListener('message', processQueue, true);
-
-	      nextTick.removeListener = function () {
-	          global.removeEventListener('message', processQueue, true);
-	      }
-
-	      return nextTick;
-	  })()
-	};
-	//#build
-
-
-	module.exports = Utils;
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Utils = __webpack_require__( 17 );
-
-	//#build
-
-	// The prototype methods are stored in a different object
-	// and applied as non enumerable properties later
-	var emitterProto = {
-		on: function( eventName, listener, once ){
-			var listeners = this._events[ eventName ] || [];
-
-			listeners.push({ callback: listener, once: once});
-			this._events[ eventName ] =  listeners;
-
-			return this;
-		},
-
-		once: function( eventName, listener ){
-			this.on( eventName, listener, true );
-		},
-
-		off: function( eventName, listener ){
-			if( typeof eventName == 'undefined' ){
-				this._events = {};
-			}
-			else if( typeof listener == 'undefined' ) {
-				this._events[ eventName ] = [];
-			}
-			else {
-				var listeners = this._events[ eventName ] || [],
-					i
-				;
-
-				for (i = listeners.length - 1; i >= 0; i--) {
-					if( listeners[i] === listener )
-						listeners.splice( i, 1 );
-				}
-			}
-
-			return this;
-		},
-
-		trigger: function( eventName ){
-			var args = [].slice.call( arguments, 1 ),
-				listeners = this._events[ eventName ] || [],
-				onceListeners = [],
-				i, listener
-			;
-
-			// Call listeners
-			for (i = 0; i < listeners.length; i++) {
-				listener = listeners[i];
-
-				if( listener.callback )
-					listener.callback.apply( null, args );
-				else {
-					// If there is not a callback, remove!
-					listener.once = true;
-				}
-
-				if( listener.once )
-					onceListeners.push( i );
-			}
-
-			// Remove listeners marked as once
-			for( i = onceListeners.length - 1; i >= 0; i-- ){
-				listeners.splice( onceListeners[i], 1 );
-			}
-
-			return this;
-		}
-	};
-
-	// Methods are not enumerable so, when the stores are
-	// extended with the emitter, they can be iterated as
-	// hashmaps
-	var Emitter = Utils.createNonEnumerable( emitterProto );
-	//#build
-
-	module.exports = Emitter;
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Utils = __webpack_require__( 17 );
-
-	//#build
-
-	/**
-	 * Creates non-enumerable property descriptors, to be used by Object.create.
-	 * @param  {Object} attrs Properties to create descriptors
-	 * @return {Object}       A hash with the descriptors.
-	 */
-	var createNE = function( attrs ){
-		var ne = {};
-
-		for( var key in attrs ){
-			ne[ key ] = {
-				writable: true,
-				configurable: true,
-				enumerable: false,
-				value: attrs[ key]
-			}
-		}
-
-		return ne;
-	}
-
-	var commonMethods = {
-		set: function( attr, value ){
-			var attrs = attr,
-				update = this.__.trans
-			;
-
-			if( typeof value != 'undefined' ){
-				attrs = {};
-				attrs[ attr ] = value;
-			}
-
-			if( !update ){
-				for( var key in attrs ){
-					update = update || this[ key ] != attrs[ key ];
-				}
-
-				// No changes, just return the node
-				if( !update )
-					return this;
-			}
-
-			return this.__.notify( 'merge', this, attrs );
-		},
-
-		reset: function( attrs ) {
-			return this.__.notify( 'replace', this, attrs );
-		},
-
-		getListener: function(){
-			return this.__.notify( 'listener', this );
-		},
-
-		toJS: function(){
-			var js;
-			if( this.constructor == Array ){
-				js = new Array( this.length );
-			}
-			else {
-				js = {};
-			}
-
-			Utils.each( this, function( child, i ){
-				if( child && child.__ )
-					js[ i ] = child.toJS();
-				else
-					js[ i ] = child;
-			});
-
-			return js;
-		},
-
-		transact: function(){
-			return this.__.notify( 'transact', this );
-		},
-		run: function(){
-			return this.__.notify( 'run', this );
-		}
-	};
-
-	var arrayMethods = Utils.extend({
-		push: function( el ){
-			return this.append( [el] );
-		},
-
-		append: function( els ){
-			if( els && els.length )
-				return this.__.notify( 'splice', this, [this.length, 0].concat( els ) );
-			return this;
-		},
-
-		pop: function(){
-			if( !this.length )
-				return this;
-
-			return this.__.notify( 'splice', this, [this.length -1, 1] );
-		},
-
-		unshift: function( el ){
-			return this.prepend( [el] );
-		},
-
-		prepend: function( els ){
-			if( els && els.length )
-				return this.__.notify( 'splice', this, [0, 0].concat( els ) );
-			return this;
-		},
-
-		shift: function(){
-			if( !this.length )
-				return this;
-
-			return this.__.notify( 'splice', this, [0, 1] );
-		},
-
-		splice: function( index, toRemove, toAdd ){
-			return this.__.notify( 'splice', this, arguments );
-		}
-	}, commonMethods );
-
-	var FrozenArray = Object.create( Array.prototype, createNE( arrayMethods ) );
-
-	var Mixins = {
-
-	Hash: Object.create( Object.prototype, createNE( Utils.extend({
-		remove: function( keys ){
-			var filtered = [],
-				k = keys
-			;
-
-			if( keys.constructor != Array )
-				k = [ keys ];
-
-			for( var i = 0, l = k.length; i<l; i++ ){
-				if( this.hasOwnProperty( k[i] ) )
-					filtered.push( k[i] );
-			}
-
-			if( filtered.length )
-				return this.__.notify( 'remove', this, filtered );
-			return this;
-		}
-	}, commonMethods))),
-
-	List: FrozenArray,
-	arrayMethods: arrayMethods
-	};
-	//#build
-
-	module.exports = Mixins;
-
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Utils = __webpack_require__( 17 ),
-		Mixins = __webpack_require__( 19),
-		Emitter = __webpack_require__(18)
-	;
-
-	//#build
-	var Frozen = {
-		freeze: function( node, notify, freezeFn ){
-			if( node && node.__ ){
-				return node;
-			}
-
-			var me = this,
-				frozen, mixin, cons
-			;
-
-			if( node.constructor == Array ){
-				frozen = this.createArray( node.length );
-			}
-			else {
-				frozen = Object.create( Mixins.Hash );
-			}
-
-			Utils.addNE( frozen, { __: {
-				listener: false,
-				parents: [],
-				notify: notify,
-				dirty: false,
-				freezeFn: freezeFn
-			}});
-
-			// Freeze children
-			Utils.each( node, function( child, key ){
-				cons = child && child.constructor;
-				if( cons == Array || cons == Object ){
-					child = me.freeze( child, notify, freezeFn );
-				}
-
-				if( child && child.__ ){
-					me.addParent( child, frozen );
-				}
-
-				frozen[ key ] = child;
-			});
-
-			freezeFn( frozen );
-
-			return frozen;
-		},
-
-		update: function( type, node, options ){
-			if( !this[ type ])
-				return Utils.error( 'Unknown update type: ' + type );
-
-			return this[ type ]( node, options );
-		},
-
-		reset: function( node, value ){
-			var me = this,
-				frozen
-			;
-
-			if( value && value.__ ){
-				frozen = value;
-				frozen.__.listener = value.__.listener;
-				frozen.__.parents = [];
-
-				// Set back the parent on the children
-				// that have been updated
-				this.fixChildren( frozen, node );
-				Utils.each( frozen, function( child ){
-					if( child && child.__ ){
-						me.removeParent( node );
-						me.addParent( child, frozen );
-					}
-				});
-			}
-			else {
-				frozen = this.freeze( node, node.__.notify, node.__.freezeFn );
-			}
-
-			return frozen;
-		},
-
-		merge: function( node, attrs ){
-			var trans = node.__.trans;
-
-			if( trans ){
-
-				for( var attr in attrs )
-					trans[ attr ] = attrs[ attr ];
-				return node;
-			}
-
-			var me = this,
-				frozen = this.copyMeta( node ),
-				notify = node.__.notify,
-				val, cons, key, isFrozen
-			;
-
-			Utils.each( node, function( child, key ){
-				isFrozen = child && child.__;
-
-				if( isFrozen ){
-					me.removeParent( child, node );
-				}
-
-				val = attrs[ key ];
-				if( !val ){
-					if( isFrozen )
-						me.addParent( child, frozen );
-					return frozen[ key ] = child;
-				}
-
-				cons = val && val.constructor;
-
-				if( cons == Array || cons == Object )
-					val = me.freeze( val, notify, node.__.freezeFn );
-
-				if( val && val.__ )
-					me.addParent( val, frozen );
-
-				delete attrs[ key ];
-
-				frozen[ key ] = val;
-			});
-
-			for( key in attrs ) {
-				val = attrs[ key ];
-				cons = val && val.constructor;
-
-				if( cons == Array || cons == Object )
-					val = me.freeze( val, notify, node.__.freezeFn );
-
-				if( val && val.__ )
-					me.addParent( val, frozen );
-
-				frozen[ key ] = val;
-			}
-
-			node.__.freezeFn( frozen );
-
-			this.refreshParents( node, frozen );
-
-			return frozen;
-		},
-
-		replace: function( node, replacement ) {
-
-			var me = this,
-				cons = replacement && replacement.constructor,
-				__ = node.__,
-				frozen = replacement
-			;
-
-			if( cons == Array || cons == Object ) {
-
-				frozen = me.freeze( replacement, __.notify, __.freezeFn );
-
-				frozen.__.parents = __.parents;
-
-				// Add the current listener if exists, replacing a
-				// previous listener in the frozen if existed
-				if( __.listener )
-					frozen.__.listener = node.__.listener;
-
-				// Since the parents will be refreshed directly,
-				// Trigger the listener here
-				if( frozen.__.listener )
-					this.trigger( frozen, 'update', frozen );
-			}
-
-			// Refresh the parent nodes directly
-			for (var i = __.parents.length - 1; i >= 0; i--) {
-				if( i == 0 ){
-					this.refresh( __.parents[i], node, frozen, false );
-				}
-				else{
-
-					this.markDirty( __.parents[i], [node, frozen] );
-				}
-			}
-			return frozen;
-		},
-
-		remove: function( node, attrs ){
-			var trans = node.__.trans;
-			if( trans ){
-				for( var l = attrs.length - 1; l >= 0; l-- )
-					delete trans[ attrs[l] ];
-				return node;
-			}
-
-			var me = this,
-				frozen = this.copyMeta( node ),
-				isFrozen
-			;
-
-			Utils.each( node, function( child, key ){
-				isFrozen = child && child.__;
-
-				if( isFrozen ){
-					me.removeParent( child, node );
-				}
-
-				if( attrs.indexOf( key ) != -1 ){
-					return;
-				}
-
-				if( isFrozen )
-					me.addParent( child, frozen );
-
-				frozen[ key ] = child;
-			});
-
-			node.__.freezeFn( frozen );
-			this.refreshParents( node, frozen );
-
-			return frozen;
-		},
-
-		splice: function( node, args ){
-			var trans = node.__.trans;
-			if( trans ){
-				trans.splice.apply( trans, args );
-				return node;
-			}
-
-			var me = this,
-				frozen = this.copyMeta( node ),
-				index = args[0],
-				deleteIndex = index + args[1],
-				__ = node.__,
-				con, child
-			;
-
-			// Clone the array
-			Utils.each( node, function( child, i ){
-
-				if( child && child.__ ){
-					me.removeParent( child, node );
-
-					// Skip the nodes to delete
-					if( i < index || i>= deleteIndex )
-						me.addParent( child, frozen );
-				}
-
-				frozen[i] = child;
-			});
-
-			// Prepare the new nodes
-			if( args.length > 1 ){
-				for (var i = args.length - 1; i >= 2; i--) {
-					child = args[i];
-					con = child && child.constructor;
-
-					if( con == Array || con == Object )
-						child = this.freeze( child, __.notify, __.freezeFn );
-
-					if( child && child.__ )
-						this.addParent( child, frozen );
-
-					args[i] = child;
-				}
-			}
-
-			// splice
-			Array.prototype.splice.apply( frozen, args );
-
-			node.__.freezeFn( frozen );
-			this.refreshParents( node, frozen );
-
-			return frozen;
-		},
-
-		transact: function( node ) {
-			var me = this,
-				transacting = node.__.trans,
-				trans
-			;
-
-			if( transacting )
-				return transacting;
-
-			trans = node.constructor == Array ? [] : {};
-
-			Utils.each( node, function( child, key ){
-				trans[ key ] = child;
-			});
-
-			node.__.trans = trans;
-
-			// Call run automatically in case
-			// the user forgot about it
-			Utils.nextTick( function(){
-				if( node.__.trans )
-					me.run( node );
-			});
-
-			return trans;
-		},
-
-		run: function( node ) {
-			var me = this,
-				trans = node.__.trans
-			;
-
-			if( !trans )
-				return node;
-
-			// Remove the node as a parent
-			Utils.each( trans, function( child, key ){
-				if( child && child.__ ){
-					me.removeParent( child, node );
-				}
-			});
-
-			delete node.__.trans;
-
-			var result = this.replace( node, trans );
-			return result;
-		},
-
-		refresh: function( node, oldChild, newChild, returnUpdated ){
-			var me = this,
-				trans = node.__.trans,
-				found = 0
-			;
-
-			if( trans ){
-
-				Utils.each( trans, function( child, key ){
-					if( found ) return;
-
-					if( child == oldChild ){
-
-						trans[ key ] = newChild;
-						found = 1;
-
-						if( newChild && newChild.__ )
-							me.addParent( newChild, node );
-					}
-				});
-
-				return node;
-			}
-
-			var frozen = this.copyMeta( node ),
-				dirty = node.__.dirty,
-				dirt, replacement, __
-			;
-
-			if( dirty ){
-				dirt = dirty[0],
-				replacement = dirty[1]
-			}
-
-			Utils.each( node, function( child, key ){
-				if( child == oldChild ){
-					child = newChild;
-				}
-				else if( child == dirt ){
-					child = replacement;
-				}
-
-				if( child && (__ = child.__) ){
-
-					// If there is a trans happening we
-					// don't update a dirty node now. The update
-					// will occur on run.
-					if( !__.trans && __.dirty ){
-						child = me.refresh( child, __.dirty[0], __.dirty[1], true );
-					}
-
-
-					me.removeParent( child, node );
-					me.addParent( child, frozen );
-				}
-
-				frozen[ key ] = child;
-			});
-
-			node.__.freezeFn( frozen );
-
-			// If the node was dirty, clean it
-			node.__.dirty = false;
-
-			if( returnUpdated )
-				return frozen;
-
-			this.refreshParents( node, frozen );
-		},
-
-		fixChildren: function( node, oldNode ){
-			var me = this;
-			Utils.each( node, function( child ){
-				if( !child || !child.__ )
-					return;
-
-				// If the child is linked to the node,
-				// maybe its children are not linked
-				if( child.__.parents.indexOf( node ) != -1 )
-					return me.fixChildren( child );
-
-				// If the child wasn't linked it is sure
-				// that it wasn't modified. Just link it
-				// to the new parent
-				if( child.__.parents.length == 1 )
-					return child.__.parents = [ node ];
-
-				if( oldNode )
-					me.removeParent( child, oldNode );
-
-				me.addParent( node );
-			});
-		},
-
-		copyMeta: function( node ){
-			var me = this,
-				frozen
-			;
-
-			if( node.constructor == Array ){
-				frozen = this.createArray( node.length );
-			}
-			else {
-				frozen = Object.create( Mixins.Hash );
-			}
-
-			var __ = node.__;
-
-			Utils.addNE( frozen, {__: {
-				notify: __.notify,
-				listener: __.listener,
-				parents: __.parents.slice( 0 ),
-				trans: __.trans,
-				dirty: false,
-				freezeFn: __.freezeFn
-			}});
-
-			return frozen;
-		},
-
-		refreshParents: function( oldChild, newChild ){
-			var __ = oldChild.__,
-				i
-			;
-
-			if( __.listener )
-				this.trigger( newChild, 'update', newChild );
-
-			if( !__.parents.length ){
-				if( __.listener ){
-					__.listener.trigger( 'immediate', oldChild, newChild );
-				}
-			}
-			else {
-				for (i = __.parents.length - 1; i >= 0; i--) {
-					// If there is more than one parent, mark everyone as dirty
-					// but the last in the iteration, and when the last is refreshed
-					// it will update the dirty nodes.
-					if( i == 0 )
-						this.refresh( __.parents[i], oldChild, newChild, false );
-					else{
-
-						this.markDirty( __.parents[i], [oldChild, newChild] );
-					}
-				}
-			}
-		},
-
-		markDirty: function( node, dirt ){
-			var __ = node.__,
-				i
-			;
-			__.dirty = dirt;
-
-			// If there is a transaction happening in the node
-			// update the transaction data immediately
-			if( __.trans )
-				this.refresh( node, dirt[0], dirt[1] );
-
-			for ( i = __.parents.length - 1; i >= 0; i-- ) {
-
-				this.markDirty( __.parents[i], dirt );
-			}
-		},
-
-		removeParent: function( node, parent ){
-			var parents = node.__.parents,
-				index = parents.indexOf( parent )
-			;
-
-			if( index != -1 ){
-
-				parents.splice( index, 1 );
-			}
-		},
-
-		addParent: function( node, parent ){
-			var parents = node.__.parents,
-				index = parents.indexOf( parent )
-			;
-
-			if( index == -1 ){
-				parents[ parents.length ] = parent;
-			}
-		},
-
-		trigger: function( node, eventName, param ){
-			var listener = node.__.listener,
-				ticking = listener.ticking
-			;
-
-			listener.ticking = param;
-			if( !ticking ){
-				Utils.nextTick( function(){
-					var updated = listener.ticking;
-					listener.ticking = false;
-					listener.trigger( eventName, updated );
-				});
-			}
-		},
-
-		createListener: function( frozen ){
-			var l = frozen.__.listener;
-
-			if( !l ) {
-				l = Object.create(Emitter, {
-					_events: {
-						value: {},
-						writable: true
-					}
-				});
-
-				frozen.__.listener = l;
-			}
-
-			return l;
-		},
-
-		createArray: (function(){
-			// Set createArray method
-			if( [].__proto__ )
-				return function( length ){
-					var arr = new Array( length );
-					arr.__proto__ = Mixins.List;
-					return arr;
-				}
-			return function( length ){
-				var arr = new Array( length ),
-					methods = Mixins.arrayMethods
-				;
-				for( var m in methods ){
-					arr[ m ] = methods[ m ];
-				}
-				return arr;
-			}
-		})()
-	};
-	//#build
-
-	module.exports = Frozen;
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var objToStr = function(x){ return Object.prototype.toString.call(x); };
-
-	var thrower = function(error){
-	    throw error;
-	};
-
-	var mixins = module.exports = function makeMixinFunction(rules, _opts){
-	    var opts = _opts || {};
-	    if (!opts.unknownFunction) {
-	        opts.unknownFunction = mixins.ONCE;
-	    }
-
-	    if (!opts.nonFunctionProperty) {
-	        opts.nonFunctionProperty = function(left, right, key){
-	            if (left !== undefined && right !== undefined) {
-	                var getTypeName = function(obj){
-	                    if (obj && obj.constructor && obj.constructor.name) {
-	                        return obj.constructor.name;
-	                    }
-	                    else {
-	                        return objToStr(obj).slice(8, -1);
-	                    }
-	                };
-	                throw new TypeError('Cannot mixin key ' + key + ' because it is provided by multiple sources, '
-	                        + 'and the types are ' + getTypeName(left) + ' and ' + getTypeName(right));
-	            }
-	            return left === undefined ? right : left;
-	        };
-	    }
-
-	    function setNonEnumerable(target, key, value){
-	        if (key in target){
-	            target[key] = value;
-	        }
-	        else {
-	            Object.defineProperty(target, key, {
-	                value: value,
-	                writable: true,
-	                configurable: true
-	            });
-	        }
-	    }
-
-	    return function applyMixin(source, mixin){
-	        Object.keys(mixin).forEach(function(key){
-	            var left = source[key], right = mixin[key], rule = rules[key];
-
-	            // this is just a weird case where the key was defined, but there's no value
-	            // behave like the key wasn't defined
-	            if (left === undefined && right === undefined) return;
-
-	            var wrapIfFunction = function(thing){
-	                return typeof thing !== "function" ? thing
-	                : function(){
-	                    return thing.call(this, arguments);
-	                };
-	            };
-
-	            // do we have a rule for this key?
-	            if (rule) {
-	                // may throw here
-	                var fn = rule(left, right, key);
-	                setNonEnumerable(source, key, wrapIfFunction(fn));
-	                return;
-	            }
-
-	            var leftIsFn = typeof left === "function";
-	            var rightIsFn = typeof right === "function";
-
-	            // check to see if they're some combination of functions or undefined
-	            // we already know there's no rule, so use the unknown function behavior
-	            if (leftIsFn && right === undefined
-	             || rightIsFn && left === undefined
-	             || leftIsFn && rightIsFn) {
-	                // may throw, the default is ONCE so if both are functions
-	                // the default is to throw
-	                setNonEnumerable(source, key, wrapIfFunction(opts.unknownFunction(left, right, key)));
-	                return;
-	            }
-
-	            // we have no rule for them, one may be a function but one or both aren't
-	            // our default is MANY_MERGED_LOOSE which will merge objects, concat arrays
-	            // and throw if there's a type mismatch or both are primitives (how do you merge 3, and "foo"?)
-	            source[key] = opts.nonFunctionProperty(left, right, key);
-	        });
-	    };
-	};
-
-	mixins._mergeObjects = function(obj1, obj2) {
-	    var assertObject = function(obj, obj2){
-	        var type = objToStr(obj);
-	        if (type !== '[object Object]') {
-	            var displayType = obj.constructor ? obj.constructor.name : 'Unknown';
-	            var displayType2 = obj2.constructor ? obj2.constructor.name : 'Unknown';
-	            thrower('cannot merge returned value of type ' + displayType + ' with an ' + displayType2);
-	        }
-	    };
-
-	    if (Array.isArray(obj1) && Array.isArray(obj2)) {
-	        return obj1.concat(obj2);
-	    }
-
-	    assertObject(obj1, obj2);
-	    assertObject(obj2, obj1);
-
-	    var result = {};
-	    Object.keys(obj1).forEach(function(k){
-	        if (Object.prototype.hasOwnProperty.call(obj2, k)) {
-	            thrower('cannot merge returns because both have the ' + JSON.stringify(k) + ' key');
-	        }
-	        result[k] = obj1[k];
-	    });
-
-	    Object.keys(obj2).forEach(function(k){
-	        // we can skip the conflict check because all conflicts would already be found
-	        result[k] = obj2[k];
-	    });
-	    return result;
-
-	}
-
-	// define our built-in mixin types
-	mixins.ONCE = function(left, right, key){
-	    if (left && right) {
-	        throw new TypeError('Cannot mixin ' + key + ' because it has a unique constraint.');
-	    }
-
-	    var fn = left || right;
-
-	    return function(args){
-	        return fn.apply(this, args);
-	    };
-	};
-
-	mixins.MANY = function(left, right, key){
-	    return function(args){
-	        if (right) right.apply(this, args);
-	        return left ? left.apply(this, args) : undefined;
-	    };
-	};
-
-	mixins.MANY_MERGED_LOOSE = function(left, right, key) {
-	    if(left && right) {
-	        return mixins._mergeObjects(left, right);
-	    }
-
-	    return left || right;
-	}
-
-	mixins.MANY_MERGED = function(left, right, key){
-	    return function(args){
-	        var res1 = right && right.apply(this, args);
-	        var res2 = left && left.apply(this, args);
-	        if (res1 && res2) {
-	            return mixins._mergeObjects(res1, res2)
-	        }
-	        return res2 || res1;
-	    };
-	};
-
-
-	mixins.REDUCE_LEFT = function(_left, _right, key){
-	    var left = _left || function(){ return x };
-	    var right = _right || function(x){ return x };
-	    return function(args){
-	        return right.call(this, left.apply(this, args));
-	    };
-	};
-
-	mixins.REDUCE_RIGHT = function(_left, _right, key){
-	    var left = _left || function(){ return x };
-	    var right = _right || function(x){ return x };
-	    return function(args){
-	        return left.call(this, right.apply(this, args));
-	    };
-	};
-
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	function ToObject(val) {
-		if (val == null) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	module.exports = Object.assign || function (target, source) {
-		var from;
-		var keys;
-		var to = ToObject(target);
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = arguments[s];
-			keys = Object.keys(Object(from));
-
-			for (var i = 0; i < keys.length; i++) {
-				to[keys[i]] = from[keys[i]];
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function () {
-		'use strict';
-
-		module.exports = {
-			'inflate': __webpack_require__(25),
-			'deflate': __webpack_require__(26)
-		};
-	}());
-
-
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
+/* 6 */
+/***/ function(module, exports) {
 
 	(function () {
 		'use strict';
@@ -4035,8 +1543,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
+
+	(function () {
+		'use strict';
+
+		module.exports = {
+			'inflate': __webpack_require__(8),
+			'deflate': __webpack_require__(9)
+		};
+	}());
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
 
 	/*
 	 * $Id: rawinflate.js,v 0.2 2009/03/01 18:32:24 dankogai Exp $
@@ -4853,8 +2375,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
+/* 9 */
+/***/ function(module, exports) {
 
 	/*
 	 * $Id: rawdeflate.js,v 0.3 2009/03/01 19:05:05 dankogai Exp dankogai $
@@ -6553,6 +4075,2672 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports.DEFAULT_LEVEL = DEFAULT_LEVEL;
 	}());
 
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Freezer = __webpack_require__(11);
+	module.exports = Freezer;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Utils = __webpack_require__( 12 ),
+		Emitter = __webpack_require__( 13 ),
+		Mixins = __webpack_require__( 14 ),
+		Frozen = __webpack_require__( 15 )
+	;
+
+	//#build
+	var Freezer = function( initialValue, options ) {
+		var me = this,
+			mutable = ( options && options.mutable ) || false,
+			live = ( options && options.live ) || live
+		;
+
+		// Immutable data
+		var frozen;
+		var pivotTriggers = [], pivotTicking = 0;
+		var triggerNow = function( node ){
+			var _ = node.__,
+				i
+			;
+			if( _.listener ){
+				Frozen.trigger( node, 'update', 0, true );
+
+				if( !_.parents.length )
+					_.listener.trigger('immediate', 'now');
+			}
+
+			for (i = 0; i < _.parents.length; i++) {
+				notify('now', _.parents[i]);
+			}
+		};
+		var addToPivotTriggers = function( node ){
+			pivotTriggers.push( node );
+			if( !pivotTicking ){
+				pivotTicking = 1;
+				Utils.nextTick( function(){
+					pivotTriggers = [];
+					pivotTicking = 0;
+				});
+			}
+		}
+		var notify = function notify( eventName, node, options ){
+			var _ = node.__,
+				nowNode
+			;
+
+			if( eventName == 'listener' )
+				return Frozen.createListener( node );
+
+			if( eventName == 'now' ){
+				if( pivotTriggers.length ){
+					while( pivotTriggers.length ){
+						nowNode = pivotTriggers.shift();
+						triggerNow( nowNode );
+					}
+				}
+				else {
+					triggerNow( node );
+				}
+				return node;
+			}
+
+			var update = Frozen.update( eventName, node, options );
+
+			if( eventName != 'pivot' ){
+				var pivot = Utils.findPivot( update );
+				if( pivot ) {
+					addToPivotTriggers( update );
+		  			return pivot;
+				}
+			}
+
+			return update;
+		};
+
+		var freeze = function(){};
+		if( !mutable )
+			freeze = function( obj ){ Object.freeze( obj ); };
+
+		// Create the frozen object
+		frozen = Frozen.freeze( initialValue, notify, freeze, live );
+
+		// Listen to its changes immediately
+		var listener = frozen.getListener();
+
+		// Updating flag to trigger the event on nextTick
+		var updating = false;
+
+		listener.on( 'immediate', function( prevNode, updated ){
+
+			if( prevNode == 'now' ){
+				if( !updating )
+					return;
+				updating = false;
+				return me.trigger( 'update', frozen );
+			}
+
+			if( prevNode != frozen )
+				return;
+
+			frozen = updated;
+
+			if( live )
+				return me.trigger( 'update', updated );
+
+			// Trigger on next tick
+			if( !updating ){
+				updating = true;
+				Utils.nextTick( function(){
+					if( updating ){
+						updating = false;
+						me.trigger( 'update', frozen );
+					}
+				});
+			}
+		});
+
+		Utils.addNE( this, {
+			get: function(){
+				return frozen;
+			},
+			set: function( node ){
+				var newNode = notify( 'reset', frozen, node );
+				newNode.__.listener.trigger( 'immediate', frozen, newNode );
+			}
+		});
+
+		Utils.addNE( this, { getData: this.get, setData: this.set } );
+
+		// The event store
+		this._events = [];
+	}
+
+	Freezer.prototype = Utils.createNonEnumerable({constructor: Freezer}, Emitter);
+	//#build
+
+	module.exports = Freezer;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	//#build
+	var global = (new Function("return this")());
+
+	var Utils = {
+		extend: function( ob, props ){
+			for( var p in props ){
+				ob[p] = props[p];
+			}
+			return ob;
+		},
+
+		createNonEnumerable: function( obj, proto ){
+			var ne = {};
+			for( var key in obj )
+				ne[key] = {value: obj[key] };
+			return Object.create( proto || {}, ne );
+		},
+
+		error: function( message ){
+			var err = new Error( message );
+			if( console )
+				return console.error( err );
+			else
+				throw err;
+		},
+
+		each: function( o, clbk ){
+			var i,l,keys;
+			if( o && o.constructor == Array ){
+				for (i = 0, l = o.length; i < l; i++)
+					clbk( o[i], i );
+			}
+			else {
+				keys = Object.keys( o );
+				for( i = 0, l = keys.length; i < l; i++ )
+					clbk( o[ keys[i] ], keys[i] );
+			}
+		},
+
+		addNE: function( node, attrs ){
+			for( var key in attrs ){
+				Object.defineProperty( node, key, {
+					enumerable: false,
+					configurable: true,
+					writable: true,
+					value: attrs[ key ]
+				});
+			}
+		},
+
+		// nextTick - by stagas / public domain
+	  	nextTick: (function () {
+	      var queue = [],
+				dirty = false,
+				fn,
+				hasPostMessage = !!global.postMessage && (typeof Window != 'undefined') && (global instanceof Window),
+				messageName = 'nexttick',
+				trigger = (function () {
+					return hasPostMessage
+						? function trigger () {
+						global.postMessage(messageName, '*');
+					}
+					: function trigger () {
+						setTimeout(function () { processQueue() }, 0);
+					};
+				}()),
+				processQueue = (function () {
+					return hasPostMessage
+						? function processQueue (event) {
+							if (event.source === global && event.data === messageName) {
+								event.stopPropagation();
+								flushQueue();
+							}
+						}
+						: flushQueue;
+	      	})()
+	      ;
+
+	      function flushQueue () {
+	          while (fn = queue.shift()) {
+	              fn();
+	          }
+	          dirty = false;
+	      }
+
+	      function nextTick (fn) {
+	          queue.push(fn);
+	          if (dirty) return;
+	          dirty = true;
+	          trigger();
+	      }
+
+	      if (hasPostMessage) global.addEventListener('message', processQueue, true);
+
+	      nextTick.removeListener = function () {
+	          global.removeEventListener('message', processQueue, true);
+	      }
+
+	      return nextTick;
+	  })(),
+
+	  findPivot: function( node ){
+	  		if( !node || !node.__ )
+	  			return;
+
+	  		if( node.__.pivot )
+	  			return node;
+
+	  		var found = 0,
+	  			parents = node.__.parents,
+	  			i = 0,
+	  			parent
+	  		;
+
+	  		// Look up for the pivot in the parents
+	  		while( !found && i < parents.length ){
+	  			parent = parents[i];
+	  			if( parent.__.pivot )
+	  				found = parent;
+	  			i++;
+	  		}
+
+	  		if( found ){
+	  			return found;
+	  		}
+
+	  		// If not found, try with the parent's parents
+	  		i=0;
+	  		while( !found && i < parents.length ){
+		  		found = this.findPivot( parents[i] );
+		  		i++;
+		  	}
+
+	  		return found;
+	  }
+	};
+	//#build
+
+
+	module.exports = Utils;
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Utils = __webpack_require__( 12 );
+
+
+
+	//#build
+
+
+	var BEFOREALL = 'beforeAll',
+		AFTERALL = 'afterAll'
+	;
+	var specialEvents = ['immediate', BEFOREALL, AFTERALL];
+
+	// The prototype methods are stored in a different object
+	// and applied as non enumerable properties later
+	var emitterProto = {
+		on: function( eventName, listener, once ){
+			var listeners = this._events[ eventName ] || [];
+
+			listeners.push({ callback: listener, once: once});
+			this._events[ eventName ] =  listeners;
+
+			return this;
+		},
+
+		once: function( eventName, listener ){
+			return this.on( eventName, listener, true );
+		},
+
+		off: function( eventName, listener ){
+			if( typeof eventName == 'undefined' ){
+				this._events = {};
+			}
+			else if( typeof listener == 'undefined' ) {
+				this._events[ eventName ] = [];
+			}
+			else {
+				var listeners = this._events[ eventName ] || [],
+					i
+				;
+
+				for (i = listeners.length - 1; i >= 0; i--) {
+					if( listeners[i].callback === listener )
+						listeners.splice( i, 1 );
+				}
+			}
+
+			return this;
+		},
+
+		trigger: function( eventName ){
+			var args = [].slice.call( arguments, 1 ),
+				listeners = this._events[ eventName ] || [],
+				onceListeners = [],
+				special = specialEvents.indexOf( eventName ) != -1,
+				i, listener
+			;
+
+			special || this.trigger.apply( this, [BEFOREALL, eventName].concat( args ) );
+
+			// Call listeners
+			for (i = 0; i < listeners.length; i++) {
+				listener = listeners[i];
+
+				if( listener.callback )
+					listener.callback.apply( this, args );
+				else {
+					// If there is not a callback, remove!
+					listener.once = true;
+				}
+
+				if( listener.once )
+					onceListeners.push( i );
+			}
+
+			// Remove listeners marked as once
+			for( i = onceListeners.length - 1; i >= 0; i-- ){
+				listeners.splice( onceListeners[i], 1 );
+			}
+
+			special || this.trigger.apply( this, [AFTERALL, eventName].concat( args ) );
+
+			return this;
+		}
+	};
+
+	// Methods are not enumerable so, when the stores are
+	// extended with the emitter, they can be iterated as
+	// hashmaps
+	var Emitter = Utils.createNonEnumerable( emitterProto );
+	//#build
+
+	module.exports = Emitter;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Utils = __webpack_require__( 12 );
+
+	//#build
+
+	/**
+	 * Creates non-enumerable property descriptors, to be used by Object.create.
+	 * @param  {Object} attrs Properties to create descriptors
+	 * @return {Object}       A hash with the descriptors.
+	 */
+	var createNE = function( attrs ){
+		var ne = {};
+
+		for( var key in attrs ){
+			ne[ key ] = {
+				writable: true,
+				configurable: true,
+				enumerable: false,
+				value: attrs[ key]
+			}
+		}
+
+		return ne;
+	}
+
+	var commonMethods = {
+		set: function( attr, value ){
+			var attrs = attr,
+				update = this.__.trans
+			;
+
+			if( typeof attr != 'object' ){
+				attrs = {};
+				attrs[ attr ] = value;
+			}
+
+			if( !update ){
+				for( var key in attrs ){
+					update = update || this[ key ] != attrs[ key ];
+				}
+
+				// No changes, just return the node
+				if( !update )
+					return this;
+			}
+
+			return this.__.notify( 'merge', this, attrs );
+		},
+
+		reset: function( attrs ) {
+			return this.__.notify( 'replace', this, attrs );
+		},
+
+		getListener: function(){
+			return this.__.notify( 'listener', this );
+		},
+
+		toJS: function(){
+			var js;
+			if( this.constructor == Array ){
+				js = new Array( this.length );
+			}
+			else {
+				js = {};
+			}
+
+			Utils.each( this, function( child, i ){
+				if( child && child.__ )
+					js[ i ] = child.toJS();
+				else
+					js[ i ] = child;
+			});
+
+			return js;
+		},
+
+		transact: function(){
+			return this.__.notify( 'transact', this );
+		},
+
+		run: function(){
+			return this.__.notify( 'run', this );
+		},
+
+		now: function(){
+			return this.__.notify( 'now', this );
+		},
+
+		pivot: function(){
+			return this.__.notify( 'pivot', this );
+		}
+	};
+
+	var arrayMethods = Utils.extend({
+		push: function( el ){
+			return this.append( [el] );
+		},
+
+		append: function( els ){
+			if( els && els.length )
+				return this.__.notify( 'splice', this, [this.length, 0].concat( els ) );
+			return this;
+		},
+
+		pop: function(){
+			if( !this.length )
+				return this;
+
+			return this.__.notify( 'splice', this, [this.length -1, 1] );
+		},
+
+		unshift: function( el ){
+			return this.prepend( [el] );
+		},
+
+		prepend: function( els ){
+			if( els && els.length )
+				return this.__.notify( 'splice', this, [0, 0].concat( els ) );
+			return this;
+		},
+
+		shift: function(){
+			if( !this.length )
+				return this;
+
+			return this.__.notify( 'splice', this, [0, 1] );
+		},
+
+		splice: function( index, toRemove, toAdd ){
+			return this.__.notify( 'splice', this, arguments );
+		}
+	}, commonMethods );
+
+	var FrozenArray = Object.create( Array.prototype, createNE( arrayMethods ) );
+
+	var Mixins = {
+
+	Hash: Object.create( Object.prototype, createNE( Utils.extend({
+		remove: function( keys ){
+			var filtered = [],
+				k = keys
+			;
+
+			if( keys.constructor != Array )
+				k = [ keys ];
+
+			for( var i = 0, l = k.length; i<l; i++ ){
+				if( this.hasOwnProperty( k[i] ) )
+					filtered.push( k[i] );
+			}
+
+			if( filtered.length )
+				return this.__.notify( 'remove', this, filtered );
+			return this;
+		}
+	}, commonMethods))),
+
+	List: FrozenArray,
+	arrayMethods: arrayMethods
+	};
+	//#build
+
+	module.exports = Mixins;
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Utils = __webpack_require__( 12 ),
+		Mixins = __webpack_require__( 14),
+		Emitter = __webpack_require__(13)
+	;
+
+	//#build
+	var Frozen = {
+		freeze: function( node, notify, freezeFn, live ){
+			if( node && node.__ ){
+				return node;
+			}
+
+			var me = this,
+				frozen, mixin, cons
+			;
+
+			if( node.constructor == Array ){
+				frozen = this.createArray( node.length );
+			}
+			else {
+				frozen = Object.create( Mixins.Hash );
+			}
+
+			Utils.addNE( frozen, { __: {
+				listener: false,
+				parents: [],
+				notify: notify,
+				freezeFn: freezeFn,
+				live: live || false
+			}});
+
+			// Freeze children
+			Utils.each( node, function( child, key ){
+				cons = child && child.constructor;
+				if( cons == Array || cons == Object ){
+					child = me.freeze( child, notify, freezeFn, live );
+				}
+
+				if( child && child.__ ){
+					me.addParent( child, frozen );
+				}
+
+				frozen[ key ] = child;
+			});
+
+			freezeFn( frozen );
+
+			return frozen;
+		},
+
+		update: function( type, node, options ){
+			if( !this[ type ])
+				return Utils.error( 'Unknown update type: ' + type );
+
+			return this[ type ]( node, options );
+		},
+
+		reset: function( node, value ){
+			var me = this,
+				_ = node.__,
+				frozen = value
+			;
+
+			if( !frozen.__ ){
+				frozen = this.freeze( value, _.notify, _.freezeFn, _.live );
+			}
+
+			frozen.__.listener = _.listener;
+			frozen.__.parents = _.parents;
+
+			// Set back the parent on the children
+			// that have been updated
+			this.fixChildren( frozen, node );
+			Utils.each( frozen, function( child ){
+				if( child && child.__ ){
+					me.removeParent( node );
+					me.addParent( child, frozen );
+				}
+			});
+
+			return frozen;
+		},
+
+		merge: function( node, attrs ){
+			var _ = node.__,
+				trans = _.trans,
+
+				// Clone the attrs to not modify the argument
+				attrs = Utils.extend( {}, attrs)
+			;
+
+			if( trans ){
+
+				for( var attr in attrs )
+					trans[ attr ] = attrs[ attr ];
+				return node;
+			}
+
+			var me = this,
+				frozen = this.copyMeta( node ),
+				notify = _.notify,
+				val, cons, key, isFrozen
+			;
+
+			Utils.each( node, function( child, key ){
+				isFrozen = child && child.__;
+
+				if( isFrozen ){
+					me.removeParent( child, node );
+				}
+
+				val = attrs[ key ];
+				if( !val ){
+					if( isFrozen )
+						me.addParent( child, frozen );
+					return frozen[ key ] = child;
+				}
+
+				cons = val && val.constructor;
+
+				if( cons == Array || cons == Object )
+					val = me.freeze( val, notify, _.freezeFn, _.live );
+
+				if( val && val.__ )
+					me.addParent( val, frozen );
+
+				delete attrs[ key ];
+
+				frozen[ key ] = val;
+			});
+
+
+			for( key in attrs ) {
+				val = attrs[ key ];
+				cons = val && val.constructor;
+
+				if( cons == Array || cons == Object )
+					val = me.freeze( val, notify, _.freezeFn, _.live );
+
+				if( val && val.__ )
+					me.addParent( val, frozen );
+
+				frozen[ key ] = val;
+			}
+
+			_.freezeFn( frozen );
+
+			this.refreshParents( node, frozen );
+
+			return frozen;
+		},
+
+		replace: function( node, replacement ) {
+
+			var me = this,
+				cons = replacement && replacement.constructor,
+				_ = node.__,
+				frozen = replacement
+			;
+
+			if( cons == Array || cons == Object ) {
+
+				frozen = me.freeze( replacement, _.notify, _.freezeFn, _.live );
+
+				frozen.__.parents = _.parents;
+
+				// Add the current listener if exists, replacing a
+				// previous listener in the frozen if existed
+				if( _.listener )
+					frozen.__.listener = _.listener;
+
+				// Since the parents will be refreshed directly,
+				// Trigger the listener here
+				this.trigger( frozen, 'update', frozen, _.live );
+			}
+
+			// Refresh the parent nodes directly
+			if( !_.parents.length && _.listener ){
+				_.listener.trigger( 'immediate', node, frozen );
+			}
+			for (var i = _.parents.length - 1; i >= 0; i--) {
+				if( i == 0 ){
+					this.refresh( _.parents[i], node, frozen );
+				}
+				else{
+
+					this.markDirty( _.parents[i], [node, frozen] );
+				}
+			}
+			return frozen;
+		},
+
+		remove: function( node, attrs ){
+			var trans = node.__.trans;
+			if( trans ){
+				for( var l = attrs.length - 1; l >= 0; l-- )
+					delete trans[ attrs[l] ];
+				return node;
+			}
+
+			var me = this,
+				frozen = this.copyMeta( node ),
+				isFrozen
+			;
+
+			Utils.each( node, function( child, key ){
+				isFrozen = child && child.__;
+
+				if( isFrozen ){
+					me.removeParent( child, node );
+				}
+
+				if( attrs.indexOf( key ) != -1 ){
+					return;
+				}
+
+				if( isFrozen )
+					me.addParent( child, frozen );
+
+				frozen[ key ] = child;
+			});
+
+			node.__.freezeFn( frozen );
+			this.refreshParents( node, frozen );
+
+			return frozen;
+		},
+
+		splice: function( node, args ){
+			var _ = node.__,
+				trans = _.trans
+			;
+
+			if( trans ){
+				trans.splice.apply( trans, args );
+				return node;
+			}
+
+			var me = this,
+				frozen = this.copyMeta( node ),
+				index = args[0],
+				deleteIndex = index + args[1],
+				con, child
+			;
+
+			// Clone the array
+			Utils.each( node, function( child, i ){
+
+				if( child && child.__ ){
+					me.removeParent( child, node );
+
+					// Skip the nodes to delete
+					if( i < index || i>= deleteIndex )
+						me.addParent( child, frozen );
+				}
+
+				frozen[i] = child;
+			});
+
+			// Prepare the new nodes
+			if( args.length > 1 ){
+				for (var i = args.length - 1; i >= 2; i--) {
+					child = args[i];
+					con = child && child.constructor;
+
+					if( con == Array || con == Object )
+						child = this.freeze( child, _.notify, _.freezeFn, _.live );
+
+					if( child && child.__ )
+						this.addParent( child, frozen );
+
+					args[i] = child;
+				}
+			}
+
+			// splice
+			Array.prototype.splice.apply( frozen, args );
+
+			node.__.freezeFn( frozen );
+			this.refreshParents( node, frozen );
+
+			return frozen;
+		},
+
+		transact: function( node ) {
+			var me = this,
+				transacting = node.__.trans,
+				trans
+			;
+
+			if( transacting )
+				return transacting;
+
+			trans = node.constructor == Array ? [] : {};
+
+			Utils.each( node, function( child, key ){
+				trans[ key ] = child;
+			});
+
+			node.__.trans = trans;
+
+			// Call run automatically in case
+			// the user forgot about it
+			Utils.nextTick( function(){
+				if( node.__.trans )
+					me.run( node );
+			});
+
+			return trans;
+		},
+
+		run: function( node ) {
+			var me = this,
+				trans = node.__.trans
+			;
+
+			if( !trans )
+				return node;
+
+			// Remove the node as a parent
+			Utils.each( trans, function( child, key ){
+				if( child && child.__ ){
+					me.removeParent( child, node );
+				}
+			});
+
+			delete node.__.trans;
+
+			var result = this.replace( node, trans );
+			return result;
+		},
+
+		pivot: function( node ){
+			node.__.pivot = 1;
+			this.unpivot( node );
+			return node;
+		},
+
+		unpivot: function( node ){
+			Utils.nextTick( function(){
+				node.__.pivot = 0;
+			});
+		},
+
+		refresh: function( node, oldChild, newChild ){
+			var me = this,
+				trans = node.__.trans,
+				found = 0
+			;
+
+			if( trans ){
+
+				Utils.each( trans, function( child, key ){
+					if( found ) return;
+
+					if( child === oldChild ){
+
+						trans[ key ] = newChild;
+						found = 1;
+
+						if( newChild && newChild.__ )
+							me.addParent( newChild, node );
+					}
+				});
+
+				return node;
+			}
+
+			var frozen = this.copyMeta( node ),
+				replacement, __
+			;
+
+			Utils.each( node, function( child, key ){
+				if( child === oldChild ){
+					child = newChild;
+				}
+
+				if( child && (__ = child.__) ){
+					me.removeParent( child, node );
+					me.addParent( child, frozen );
+				}
+
+				frozen[ key ] = child;
+			});
+
+			node.__.freezeFn( frozen );
+
+			this.refreshParents( node, frozen );
+		},
+
+		fixChildren: function( node, oldNode ){
+			var me = this;
+			Utils.each( node, function( child ){
+				if( !child || !child.__ )
+					return;
+
+				// If the child is linked to the node,
+				// maybe its children are not linked
+				if( child.__.parents.indexOf( node ) != -1 )
+					return me.fixChildren( child );
+
+				// If the child wasn't linked it is sure
+				// that it wasn't modified. Just link it
+				// to the new parent
+				if( child.__.parents.length == 1 )
+					return child.__.parents = [ node ];
+
+				if( oldNode )
+					me.removeParent( child, oldNode );
+
+				me.addParent( child, node );
+			});
+		},
+
+		copyMeta: function( node ){
+			var me = this,
+				frozen
+			;
+
+			if( node.constructor == Array ){
+				frozen = this.createArray( node.length );
+			}
+			else {
+				frozen = Object.create( Mixins.Hash );
+			}
+
+			var _ = node.__;
+
+			Utils.addNE( frozen, {__: {
+				notify: _.notify,
+				listener: _.listener,
+				parents: _.parents.slice( 0 ),
+				trans: _.trans,
+				freezeFn: _.freezeFn,
+				pivot: _.pivot,
+				live: _.live
+			}});
+
+			if( _.pivot )
+				this.unpivot( frozen );
+
+			return frozen;
+		},
+
+		refreshParents: function( oldChild, newChild ){
+			var _ = oldChild.__,
+				i
+			;
+
+			this.trigger( newChild, 'update', newChild, _.live );
+
+			if( !_.parents.length ){
+				if( _.listener ){
+					_.listener.trigger( 'immediate', oldChild, newChild );
+				}
+			}
+			else {
+				for (i = _.parents.length - 1; i >= 0; i--) {
+					this.refresh( _.parents[i], oldChild, newChild );
+				}
+			}
+		},
+
+		removeParent: function( node, parent ){
+			var parents = node.__.parents,
+				index = parents.indexOf( parent )
+			;
+
+			if( index != -1 ){
+				parents.splice( index, 1 );
+			}
+		},
+
+		addParent: function( node, parent ){
+			var parents = node.__.parents,
+				index = parents.indexOf( parent )
+			;
+
+			if( index == -1 ){
+				parents[ parents.length ] = parent;
+			}
+		},
+
+		trigger: function( node, eventName, param, now ){
+			var listener = node.__.listener;
+			if( !listener )
+				return;
+
+			var ticking = listener.ticking;
+
+			if( now ){
+				if( ticking || param ){
+					listener.ticking = 0;
+					listener.trigger( eventName, ticking || param );
+				}
+				return;
+			}
+
+			listener.ticking = param;
+			if( !ticking ){
+				Utils.nextTick( function(){
+					if( listener.ticking ){
+						var updated = listener.ticking;
+						listener.ticking = 0;
+						listener.trigger( eventName, updated );
+					}
+				});
+			}
+		},
+
+		createListener: function( frozen ){
+			var l = frozen.__.listener;
+
+			if( !l ) {
+				l = Object.create(Emitter, {
+					_events: {
+						value: {},
+						writable: true
+					}
+				});
+
+				frozen.__.listener = l;
+			}
+
+			return l;
+		},
+
+		createArray: (function(){
+			// Set createArray method
+			if( [].__proto__ )
+				return function( length ){
+					var arr = new Array( length );
+					arr.__proto__ = Mixins.List;
+					return arr;
+				}
+			return function( length ){
+				var arr = new Array( length ),
+					methods = Mixins.arrayMethods
+				;
+				for( var m in methods ){
+					arr[ m ] = methods[ m ];
+				}
+				return arr;
+			}
+		})()
+	};
+	//#build
+
+	module.exports = Frozen;
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _tessel = __webpack_require__(1);
+
+	var _tessel2 = _interopRequireDefault(_tessel);
+
+	module.exports = function tesselMixin() {
+	  var self = this;
+	  var mixin = {
+	    getInitialState: function getInitialState() {
+	      return self.get();
+	    },
+	    componentDidMount: function componentDidMount() {
+	      var _this = this;
+
+	      // Initialize the computations
+	      var computations = this._computations = this._computations || [];
+	      var computation = _tessel2['default'].autorun(function () {
+	        _this.setState(self.get());
+	      });
+	      computations.push(computation);
+	    },
+	    componentWillUnmount: function componentWillUnmount() {
+	      this._computations.forEach(function (c) {
+	        return c.stop();
+	      });
+	    }
+	  };
+	  return mixin;
+	};
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(18);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactMixin = __webpack_require__(19);
+
+	module.exports = function tesselComponentFactory() {
+
+	  var componentMixin = this.mixin;
+
+	  var TesselComponent = (function (_React$Component) {
+	    _inherits(TesselComponent, _React$Component);
+
+	    function TesselComponent() {
+	      _classCallCheck(this, _TesselComponent);
+
+	      _get(Object.getPrototypeOf(_TesselComponent.prototype), 'constructor', this).apply(this, arguments);
+	    }
+
+	    var _TesselComponent = TesselComponent;
+	    TesselComponent = (0, _reactMixin.decorate)(componentMixin)(TesselComponent) || TesselComponent;
+	    return TesselComponent;
+	  })(_react2['default'].Component);
+
+	  return TesselComponent;
+	};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var mixin = __webpack_require__(20);
+	var assign = __webpack_require__(21);
+
+	var mixinProto = mixin({
+	  // lifecycle stuff is as you'd expect
+	  componentDidMount: mixin.MANY,
+	  componentWillMount: mixin.MANY,
+	  componentWillReceiveProps: mixin.MANY,
+	  shouldComponentUpdate: mixin.ONCE,
+	  componentWillUpdate: mixin.MANY,
+	  componentDidUpdate: mixin.MANY,
+	  componentWillUnmount: mixin.MANY,
+	  getChildContext: mixin.MANY_MERGED
+	});
+
+	function setDefaultProps(reactMixin) {
+	  var getDefaultProps = reactMixin.getDefaultProps;
+
+	  if (getDefaultProps) {
+	    reactMixin.defaultProps = getDefaultProps();
+
+	    delete reactMixin.getDefaultProps;
+	  }
+	}
+
+	function setInitialState(reactMixin) {
+	  var getInitialState = reactMixin.getInitialState;
+	  var componentWillMount = reactMixin.componentWillMount;
+
+	  function applyInitialState(instance) {
+	    var state = instance.state || {};
+	    assign(state, getInitialState.call(instance));
+	    instance.state = state;
+	  }
+
+	  if (getInitialState) {
+	    if (!componentWillMount) {
+	      reactMixin.componentWillMount = function() {
+	        applyInitialState(this);
+	      };
+	    } else {
+	      reactMixin.componentWillMount = function() {
+	        applyInitialState(this);
+	        componentWillMount.call(this);
+	      };
+	    }
+
+	    delete reactMixin.getInitialState;
+	  }
+	}
+
+	function mixinClass(reactClass, reactMixin) {
+	  setDefaultProps(reactMixin);
+	  setInitialState(reactMixin);
+
+	  var prototypeMethods = {};
+	  var staticProps = {};
+
+	  Object.keys(reactMixin).forEach(function(key) {
+	    if (key === 'mixins') {
+	      return; // Handled below to ensure proper order regardless of property iteration order
+	    }
+	    if (key === 'statics') {
+	      return; // gets special handling
+	    } else if (typeof reactMixin[key] === 'function') {
+	      prototypeMethods[key] = reactMixin[key];
+	    } else {
+	      staticProps[key] = reactMixin[key];
+	    }
+	  });
+
+	  mixinProto(reactClass.prototype, prototypeMethods);
+
+	  var mergePropTypes = function(left, right, key) {
+	    if (!left) return right;
+	    if (!right) return left;
+
+	    var result = {};
+	    Object.keys(left).forEach(function(leftKey) {
+	      if (!right[leftKey]) {
+	        result[leftKey] = left[leftKey];
+	      }
+	    });
+
+	    Object.keys(right).forEach(function(rightKey) {
+	      if (left[rightKey]) {
+	        result[rightKey] = function checkBothContextTypes() {
+	          return right[rightKey].apply(this, arguments) && left[rightKey].apply(this, arguments);
+	        };
+	      } else {
+	        result[rightKey] = right[rightKey];
+	      }
+	    });
+
+	    return result;
+	  };
+
+	  mixin({
+	    childContextTypes: mergePropTypes,
+	    contextTypes: mergePropTypes,
+	    propTypes: mixin.MANY_MERGED_LOOSE,
+	    defaultProps: mixin.MANY_MERGED_LOOSE
+	  })(reactClass, staticProps);
+
+	  // statics is a special case because it merges directly onto the class
+	  if (reactMixin.statics) {
+	    Object.getOwnPropertyNames(reactMixin.statics).forEach(function(key) {
+	      var left = reactClass[key];
+	      var right = reactMixin.statics[key];
+
+	      if (left !== undefined && right !== undefined) {
+	        throw new TypeError('Cannot mixin statics because statics.' + key + ' and Component.' + key + ' are defined.');
+	      }
+
+	      reactClass[key] = left !== undefined ? left : right;
+	    });
+	  }
+
+	  // If more mixins are defined, they need to run. This emulate's react's behavior.
+	  // See behavior in code at:
+	  // https://github.com/facebook/react/blob/41aa3496aa632634f650edbe10d617799922d265/src/isomorphic/classic/class/ReactClass.js#L468
+	  // Note the .reverse(). In React, a fresh constructor is created, then all mixins are mixed in recursively,
+	  // then the actual spec is mixed in last.
+	  //
+	  // With ES6 classes, the properties are already there, so smart-mixin mixes functions (a, b) -> b()a(), which is
+	  // the opposite of how React does it. If we reverse this array, we basically do the whole logic in reverse,
+	  // which makes the result the same. See the test for more.
+	  // See also:
+	  // https://github.com/facebook/react/blob/41aa3496aa632634f650edbe10d617799922d265/src/isomorphic/classic/class/ReactClass.js#L853
+	  if (reactMixin.mixins) {
+	    reactMixin.mixins.reverse().forEach(mixinClass.bind(null, reactClass));
+	  }
+
+	  return reactClass;
+	}
+
+	module.exports = (function() {
+	  var reactMixin = mixinProto;
+
+	  reactMixin.onClass = function(reactClass, mixin) {
+	    var mixinClone = assign({}, mixin);
+	    return mixinClass(reactClass, mixinClone);
+	  };
+
+	  reactMixin.decorate = function(mixin) {
+	    return function(reactClass) {
+	      // Clone the incoming class
+	      var newClass = function(props) {
+	        reactClass.apply(this, arguments);
+	      };
+	      Object.setPrototypeOf(newClass, reactClass);
+	      newClass.prototype = Object.create(reactClass.prototype, {
+	          constructor: {
+	              value: newClass,
+	              enumerable: false,
+	              writable: true,
+	              configurable: true
+	          }
+	      });
+	      return reactMixin.onClass(newClass, mixin);
+	    };
+	  };
+
+	  return reactMixin;
+	})();
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	var objToStr = function(x){ return Object.prototype.toString.call(x); };
+
+	var thrower = function(error){
+	    throw error;
+	};
+
+	var mixins = module.exports = function makeMixinFunction(rules, _opts){
+	    var opts = _opts || {};
+	    if (!opts.unknownFunction) {
+	        opts.unknownFunction = mixins.ONCE;
+	    }
+
+	    if (!opts.nonFunctionProperty) {
+	        opts.nonFunctionProperty = function(left, right, key){
+	            if (left !== undefined && right !== undefined) {
+	                var getTypeName = function(obj){
+	                    if (obj && obj.constructor && obj.constructor.name) {
+	                        return obj.constructor.name;
+	                    }
+	                    else {
+	                        return objToStr(obj).slice(8, -1);
+	                    }
+	                };
+	                throw new TypeError('Cannot mixin key ' + key + ' because it is provided by multiple sources, '
+	                        + 'and the types are ' + getTypeName(left) + ' and ' + getTypeName(right));
+	            }
+	            return left === undefined ? right : left;
+	        };
+	    }
+
+	    function setNonEnumerable(target, key, value){
+	        if (key in target){
+	            target[key] = value;
+	        }
+	        else {
+	            Object.defineProperty(target, key, {
+	                value: value,
+	                writable: true,
+	                configurable: true
+	            });
+	        }
+	    }
+
+	    return function applyMixin(source, mixin){
+	        Object.keys(mixin).forEach(function(key){
+	            var left = source[key], right = mixin[key], rule = rules[key];
+
+	            // this is just a weird case where the key was defined, but there's no value
+	            // behave like the key wasn't defined
+	            if (left === undefined && right === undefined) return;
+
+	            var wrapIfFunction = function(thing){
+	                return typeof thing !== "function" ? thing
+	                : function(){
+	                    return thing.call(this, arguments);
+	                };
+	            };
+
+	            // do we have a rule for this key?
+	            if (rule) {
+	                // may throw here
+	                var fn = rule(left, right, key);
+	                setNonEnumerable(source, key, wrapIfFunction(fn));
+	                return;
+	            }
+
+	            var leftIsFn = typeof left === "function";
+	            var rightIsFn = typeof right === "function";
+
+	            // check to see if they're some combination of functions or undefined
+	            // we already know there's no rule, so use the unknown function behavior
+	            if (leftIsFn && right === undefined
+	             || rightIsFn && left === undefined
+	             || leftIsFn && rightIsFn) {
+	                // may throw, the default is ONCE so if both are functions
+	                // the default is to throw
+	                setNonEnumerable(source, key, wrapIfFunction(opts.unknownFunction(left, right, key)));
+	                return;
+	            }
+
+	            // we have no rule for them, one may be a function but one or both aren't
+	            // our default is MANY_MERGED_LOOSE which will merge objects, concat arrays
+	            // and throw if there's a type mismatch or both are primitives (how do you merge 3, and "foo"?)
+	            source[key] = opts.nonFunctionProperty(left, right, key);
+	        });
+	    };
+	};
+
+	mixins._mergeObjects = function(obj1, obj2) {
+	    var assertObject = function(obj, obj2){
+	        var type = objToStr(obj);
+	        if (type !== '[object Object]') {
+	            var displayType = obj.constructor ? obj.constructor.name : 'Unknown';
+	            var displayType2 = obj2.constructor ? obj2.constructor.name : 'Unknown';
+	            thrower('cannot merge returned value of type ' + displayType + ' with an ' + displayType2);
+	        }
+	    };
+
+	    if (Array.isArray(obj1) && Array.isArray(obj2)) {
+	        return obj1.concat(obj2);
+	    }
+
+	    assertObject(obj1, obj2);
+	    assertObject(obj2, obj1);
+
+	    var result = {};
+	    Object.keys(obj1).forEach(function(k){
+	        if (Object.prototype.hasOwnProperty.call(obj2, k)) {
+	            thrower('cannot merge returns because both have the ' + JSON.stringify(k) + ' key');
+	        }
+	        result[k] = obj1[k];
+	    });
+
+	    Object.keys(obj2).forEach(function(k){
+	        // we can skip the conflict check because all conflicts would already be found
+	        result[k] = obj2[k];
+	    });
+	    return result;
+
+	}
+
+	// define our built-in mixin types
+	mixins.ONCE = function(left, right, key){
+	    if (left && right) {
+	        throw new TypeError('Cannot mixin ' + key + ' because it has a unique constraint.');
+	    }
+
+	    var fn = left || right;
+
+	    return function(args){
+	        return fn.apply(this, args);
+	    };
+	};
+
+	mixins.MANY = function(left, right, key){
+	    return function(args){
+	        if (right) right.apply(this, args);
+	        return left ? left.apply(this, args) : undefined;
+	    };
+	};
+
+	mixins.MANY_MERGED_LOOSE = function(left, right, key) {
+	    if(left && right) {
+	        return mixins._mergeObjects(left, right);
+	    }
+
+	    return left || right;
+	}
+
+	mixins.MANY_MERGED = function(left, right, key){
+	    return function(args){
+	        var res1 = right && right.apply(this, args);
+	        var res2 = left && left.apply(this, args);
+	        if (res1 && res2) {
+	            return mixins._mergeObjects(res1, res2)
+	        }
+	        return res2 || res1;
+	    };
+	};
+
+
+	mixins.REDUCE_LEFT = function(_left, _right, key){
+	    var left = _left || function(x){ return x };
+	    var right = _right || function(x){ return x };
+	    return function(args){
+	        return right.call(this, left.apply(this, args));
+	    };
+	};
+
+	mixins.REDUCE_RIGHT = function(_left, _right, key){
+	    var left = _left || function(x){ return x };
+	    var right = _right || function(x){ return x };
+	    return function(args){
+	        return left.call(this, right.apply(this, args));
+	    };
+	};
+
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.createActions = createActions;
+	exports.createAsyncActions = createAsyncActions;
+	var axn = __webpack_require__(23);
+
+	function createActions(specs) {
+	  var obj = {};
+	  if (Array.isArray(specs)) {
+	    specs.forEach(function (name) {
+	      obj[name] = axn();
+	    });
+	  } else {
+	    Object.keys(specs).forEach(function (name) {
+	      obj[name] = axn(specs[name]);
+	    });
+	  }
+	  return obj;
+	}
+
+	function createAsyncActions(specs) {
+	  var obj = {};
+	  if (Array.isArray(specs)) {
+	    specs.forEach(function (name) {
+	      obj[name] = axn.async();
+	    });
+	  } else {
+	    Object.keys(specs).forEach(function (name) {
+	      obj[name] = axn.async(specs[name]);
+	    });
+	  }
+	  return obj;
+	}
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	/*jshint es3: true */
+	/*global module, Promise */
+	'use strict';
+	function createAction(spec, base) {
+	  function action(data) {
+	    return action.emit(data);
+	  }
+	  action._listeners = [];
+	  if (spec) ext(action, spec);
+	  return ext(action, base);
+	}
+
+	function axn(spec) {
+	  return createAction(spec, axn.methods);
+	}
+
+	function aaxn(spec) {
+	  return ext(createAction(spec, aaxn.methods), axn.methods);
+	}
+
+	function ext(obj, src) {
+	  for (var key in src) {
+	    if (src.hasOwnProperty(key)) {
+	      if (obj.hasOwnProperty(key)) continue;
+	      obj[key] = src[key];
+	    }
+	  }
+	  return obj;
+	}
+
+	axn.methods = {
+	  _cb: function (fn, ctx) {
+	    return function (data, result) {
+	      return fn.call(ctx, data, result);
+	    };
+	  },
+	  _listen: function (fn, ctx, once) {
+	    var cb = this._cb(fn, ctx);
+	    this._listeners.push(cb);
+	    cb.ctx = ctx;
+	    cb.fn = fn;
+	    cb.once = once;
+	    var self = this;
+	    return function () {
+	      var i = self._listeners.indexOf(cb);
+	      if (i === -1) return false;
+	      self._listeners.splice(i, 1);
+	      return true;
+	    };
+	  },
+	  listenOnce: function (fn, ctx) {
+	    return this._listen(fn, ctx, true);
+	  },
+	  listen: function (fn, ctx) {
+	    return this._listen(fn, ctx, false);
+	  },
+	  unlisten: function (fn, ctx) {
+	    for (var i = 0; i < this._listeners.length; i++) {
+	      var listener = this._listeners[i];
+	      if (listener.fn === fn && listener.ctx === ctx) {
+	        this._listeners.splice(i, 1);
+	        return true;
+	      }
+	    }
+	    return false;
+	  },
+	  shouldEmit: function (/* data */) {
+	    return true;
+	  },
+	  beforeEmit: function (data) {
+	    return data;
+	  },
+	  _beforeEmit: function (data) {
+	    return data;
+	  },
+	  _afterEmit: function (result/*, data */) {
+	    return result;
+	  },
+	  emit: function (/* ...data */) {
+	    var data = Array.prototype.slice.call(arguments);
+	    if (data.length < 2) data = data[0];
+	    data = this.beforeEmit(data);
+	    var initial = this._beforeEmit(data);
+	    var result = initial;
+	    if (!this.shouldEmit(data)) return result;
+	    for (var i = 0; i < this._listeners.length; i++) {
+	      var listener = this._listeners[i];
+	      result = listener(data, result, initial);
+	      if (listener.once) {
+	        this._listeners.splice(i, 1);
+	        i -= 1;
+	      }
+	    }
+	    result = this._afterEmit(result, initial);
+	    return result;
+	  }
+	};
+
+	aaxn.methods = {
+	  _cb: function (fn, ctx) {
+	    return function (data, p, p0) {
+	      return p.then(function (result) {
+	        if (p0._cancelled) return Promise.reject(new Error(p0._cancelled));
+	        return fn.call(ctx, data, result);
+	      });
+	    };
+	  },
+	  _beforeEmit: function (data) {
+	    return ext(Promise.resolve(data), {
+	      _cancelled: false
+	    });
+	  },
+	  _afterEmit: function (p, p0) {
+	    return ext(p.then(function (value) {
+	      if (p0._cancelled) return Promise.reject(new Error(p0._cancelled));
+	      return value;
+	    }), {
+	      cancel: function (reason) {
+	        p0._cancelled = reason || 'cancelled';
+	      },
+	      cancelled: function () {
+	        return Boolean(p0._cancelled);
+	      }
+	    });
+	  }
+	};
+
+	axn.async = aaxn;
+	module.exports = axn;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	exports.createStore = createStore;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _eventemitter2 = __webpack_require__(25);
+
+	var _eventemitter22 = _interopRequireDefault(_eventemitter2);
+
+	var _tessel = __webpack_require__(1);
+
+	var _tessel2 = _interopRequireDefault(_tessel);
+
+	var TesselStore = (function () {
+	  function TesselStore(tessel) {
+	    _classCallCheck(this, TesselStore);
+
+	    this._emitter = new _eventemitter22['default']();
+	    this._tessel = tessel;
+	  }
+
+	  // This function needs to be implemented by Tessel Class
+
+	  _createClass(TesselStore, [{
+	    key: 'bindState',
+	    value: function bindState(link) {
+	      var _this = this;
+
+	      var initial = this.state;
+
+	      // Setup state property
+	      Object.defineProperty(this, 'state', {
+	        get: function get() {
+	          return _this._tessel.internalData[link];
+	        },
+	        set: function set(val) {
+	          if (!val) return;
+	          _this._lastState = _this.state;
+	          return _this._tessel.internalData.set(_defineProperty({}, link, val));
+	        }
+	      });
+
+	      // set initial state and last state
+	      this.state = initial;
+	      this._lastState = this.state;
+
+	      var self = this;
+	      // Set listener and shallowEqual of the link property
+	      self._tessel._internal[1].on('update', function () {
+	        if (self.state !== self._lastState) {
+	          self._emitter.emit('update');
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'on',
+	    value: function on() {
+	      this._emitter.on.apply(this._emitter, arguments);
+	    }
+
+	    /**
+	     * Creates an Async API for manipulating its store state
+	     */
+	  }, {
+	    key: 'createActions',
+	    value: function createActions(ActionsClass) {
+	      var self = this;
+	      // For a class, create all actions that are method of ActionClass
+	      var methods = ActionsClass.prototype;
+	      var methodNames = Object.getOwnPropertyNames(methods).filter(function (n) {
+	        return n != "constructor";
+	      });
+	      var actions = _tessel2['default'].createAsyncActions(methodNames);
+	      // Attach action to listener
+	      methodNames.forEach(function (a) {
+	        actions[a].listen(function (payload) {
+	          return new Promise(function () {
+	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	              args[_key] = arguments[_key];
+	            }
+
+	            methods[a].apply(self.state, [payload].concat(args));
+	          });
+	        });
+	      });
+	      return actions;
+	    }
+
+	    /**
+	     * Return it's state exportable descriptor
+	     */
+	  }, {
+	    key: 'getStateDescriptor',
+	    value: function getStateDescriptor() {
+	      var self = this;
+	      return Object.defineProperties({}, {
+	        state: {
+	          get: function get() {
+	            return self.state;
+	          },
+	          set: function set(val) {
+	            return self.state = val;
+	          },
+	          configurable: true,
+	          enumerable: true
+	        }
+	      });
+	    }
+	  }]);
+
+	  return TesselStore;
+	})();
+
+	function createStore(TesselStoreExtended) {
+
+	  var tesselStoreInstance = new TesselStore(this);
+
+	  function extend(obj) {
+	    Object.getOwnPropertyNames(obj).forEach(function (k) {
+	      if (k != "constructor") {
+	        TesselStoreExtended.prototype[k] = obj[k];
+	      }
+	    });
+	  }
+
+	  extend(TesselStore.prototype);
+	  extend(tesselStoreInstance);
+
+	  var store = new TesselStoreExtended();
+
+	  return store;
+	}
+
+	;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	 * EventEmitter2
+	 * https://github.com/hij1nx/EventEmitter2
+	 *
+	 * Copyright (c) 2013 hij1nx
+	 * Licensed under the MIT license.
+	 */
+	;!function(undefined) {
+
+	  var isArray = Array.isArray ? Array.isArray : function _isArray(obj) {
+	    return Object.prototype.toString.call(obj) === "[object Array]";
+	  };
+	  var defaultMaxListeners = 10;
+
+	  function init() {
+	    this._events = {};
+	    if (this._conf) {
+	      configure.call(this, this._conf);
+	    }
+	  }
+
+	  function configure(conf) {
+	    if (conf) {
+
+	      this._conf = conf;
+
+	      conf.delimiter && (this.delimiter = conf.delimiter);
+	      conf.maxListeners && (this._events.maxListeners = conf.maxListeners);
+	      conf.wildcard && (this.wildcard = conf.wildcard);
+	      conf.newListener && (this.newListener = conf.newListener);
+
+	      if (this.wildcard) {
+	        this.listenerTree = {};
+	      }
+	    }
+	  }
+
+	  function EventEmitter(conf) {
+	    this._events = {};
+	    this.newListener = false;
+	    configure.call(this, conf);
+	  }
+
+	  //
+	  // Attention, function return type now is array, always !
+	  // It has zero elements if no any matches found and one or more
+	  // elements (leafs) if there are matches
+	  //
+	  function searchListenerTree(handlers, type, tree, i) {
+	    if (!tree) {
+	      return [];
+	    }
+	    var listeners=[], leaf, len, branch, xTree, xxTree, isolatedBranch, endReached,
+	        typeLength = type.length, currentType = type[i], nextType = type[i+1];
+	    if (i === typeLength && tree._listeners) {
+	      //
+	      // If at the end of the event(s) list and the tree has listeners
+	      // invoke those listeners.
+	      //
+	      if (typeof tree._listeners === 'function') {
+	        handlers && handlers.push(tree._listeners);
+	        return [tree];
+	      } else {
+	        for (leaf = 0, len = tree._listeners.length; leaf < len; leaf++) {
+	          handlers && handlers.push(tree._listeners[leaf]);
+	        }
+	        return [tree];
+	      }
+	    }
+
+	    if ((currentType === '*' || currentType === '**') || tree[currentType]) {
+	      //
+	      // If the event emitted is '*' at this part
+	      // or there is a concrete match at this patch
+	      //
+	      if (currentType === '*') {
+	        for (branch in tree) {
+	          if (branch !== '_listeners' && tree.hasOwnProperty(branch)) {
+	            listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i+1));
+	          }
+	        }
+	        return listeners;
+	      } else if(currentType === '**') {
+	        endReached = (i+1 === typeLength || (i+2 === typeLength && nextType === '*'));
+	        if(endReached && tree._listeners) {
+	          // The next element has a _listeners, add it to the handlers.
+	          listeners = listeners.concat(searchListenerTree(handlers, type, tree, typeLength));
+	        }
+
+	        for (branch in tree) {
+	          if (branch !== '_listeners' && tree.hasOwnProperty(branch)) {
+	            if(branch === '*' || branch === '**') {
+	              if(tree[branch]._listeners && !endReached) {
+	                listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], typeLength));
+	              }
+	              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i));
+	            } else if(branch === nextType) {
+	              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i+2));
+	            } else {
+	              // No match on this one, shift into the tree but not in the type array.
+	              listeners = listeners.concat(searchListenerTree(handlers, type, tree[branch], i));
+	            }
+	          }
+	        }
+	        return listeners;
+	      }
+
+	      listeners = listeners.concat(searchListenerTree(handlers, type, tree[currentType], i+1));
+	    }
+
+	    xTree = tree['*'];
+	    if (xTree) {
+	      //
+	      // If the listener tree will allow any match for this part,
+	      // then recursively explore all branches of the tree
+	      //
+	      searchListenerTree(handlers, type, xTree, i+1);
+	    }
+
+	    xxTree = tree['**'];
+	    if(xxTree) {
+	      if(i < typeLength) {
+	        if(xxTree._listeners) {
+	          // If we have a listener on a '**', it will catch all, so add its handler.
+	          searchListenerTree(handlers, type, xxTree, typeLength);
+	        }
+
+	        // Build arrays of matching next branches and others.
+	        for(branch in xxTree) {
+	          if(branch !== '_listeners' && xxTree.hasOwnProperty(branch)) {
+	            if(branch === nextType) {
+	              // We know the next element will match, so jump twice.
+	              searchListenerTree(handlers, type, xxTree[branch], i+2);
+	            } else if(branch === currentType) {
+	              // Current node matches, move into the tree.
+	              searchListenerTree(handlers, type, xxTree[branch], i+1);
+	            } else {
+	              isolatedBranch = {};
+	              isolatedBranch[branch] = xxTree[branch];
+	              searchListenerTree(handlers, type, { '**': isolatedBranch }, i+1);
+	            }
+	          }
+	        }
+	      } else if(xxTree._listeners) {
+	        // We have reached the end and still on a '**'
+	        searchListenerTree(handlers, type, xxTree, typeLength);
+	      } else if(xxTree['*'] && xxTree['*']._listeners) {
+	        searchListenerTree(handlers, type, xxTree['*'], typeLength);
+	      }
+	    }
+
+	    return listeners;
+	  }
+
+	  function growListenerTree(type, listener) {
+
+	    type = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+
+	    //
+	    // Looks for two consecutive '**', if so, don't add the event at all.
+	    //
+	    for(var i = 0, len = type.length; i+1 < len; i++) {
+	      if(type[i] === '**' && type[i+1] === '**') {
+	        return;
+	      }
+	    }
+
+	    var tree = this.listenerTree;
+	    var name = type.shift();
+
+	    while (name) {
+
+	      if (!tree[name]) {
+	        tree[name] = {};
+	      }
+
+	      tree = tree[name];
+
+	      if (type.length === 0) {
+
+	        if (!tree._listeners) {
+	          tree._listeners = listener;
+	        }
+	        else if(typeof tree._listeners === 'function') {
+	          tree._listeners = [tree._listeners, listener];
+	        }
+	        else if (isArray(tree._listeners)) {
+
+	          tree._listeners.push(listener);
+
+	          if (!tree._listeners.warned) {
+
+	            var m = defaultMaxListeners;
+
+	            if (typeof this._events.maxListeners !== 'undefined') {
+	              m = this._events.maxListeners;
+	            }
+
+	            if (m > 0 && tree._listeners.length > m) {
+
+	              tree._listeners.warned = true;
+	              console.error('(node) warning: possible EventEmitter memory ' +
+	                            'leak detected. %d listeners added. ' +
+	                            'Use emitter.setMaxListeners() to increase limit.',
+	                            tree._listeners.length);
+	              console.trace();
+	            }
+	          }
+	        }
+	        return true;
+	      }
+	      name = type.shift();
+	    }
+	    return true;
+	  }
+
+	  // By default EventEmitters will print a warning if more than
+	  // 10 listeners are added to it. This is a useful default which
+	  // helps finding memory leaks.
+	  //
+	  // Obviously not all Emitters should be limited to 10. This function allows
+	  // that to be increased. Set to zero for unlimited.
+
+	  EventEmitter.prototype.delimiter = '.';
+
+	  EventEmitter.prototype.setMaxListeners = function(n) {
+	    this._events || init.call(this);
+	    this._events.maxListeners = n;
+	    if (!this._conf) this._conf = {};
+	    this._conf.maxListeners = n;
+	  };
+
+	  EventEmitter.prototype.event = '';
+
+	  EventEmitter.prototype.once = function(event, fn) {
+	    this.many(event, 1, fn);
+	    return this;
+	  };
+
+	  EventEmitter.prototype.many = function(event, ttl, fn) {
+	    var self = this;
+
+	    if (typeof fn !== 'function') {
+	      throw new Error('many only accepts instances of Function');
+	    }
+
+	    function listener() {
+	      if (--ttl === 0) {
+	        self.off(event, listener);
+	      }
+	      fn.apply(this, arguments);
+	    }
+
+	    listener._origin = fn;
+
+	    this.on(event, listener);
+
+	    return self;
+	  };
+
+	  EventEmitter.prototype.emit = function() {
+
+	    this._events || init.call(this);
+
+	    var type = arguments[0];
+
+	    if (type === 'newListener' && !this.newListener) {
+	      if (!this._events.newListener) { return false; }
+	    }
+
+	    // Loop through the *_all* functions and invoke them.
+	    if (this._all) {
+	      var l = arguments.length;
+	      var args = new Array(l - 1);
+	      for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+	      for (i = 0, l = this._all.length; i < l; i++) {
+	        this.event = type;
+	        this._all[i].apply(this, args);
+	      }
+	    }
+
+	    // If there is no 'error' event listener then throw.
+	    if (type === 'error') {
+
+	      if (!this._all &&
+	        !this._events.error &&
+	        !(this.wildcard && this.listenerTree.error)) {
+
+	        if (arguments[1] instanceof Error) {
+	          throw arguments[1]; // Unhandled 'error' event
+	        } else {
+	          throw new Error("Uncaught, unspecified 'error' event.");
+	        }
+	        return false;
+	      }
+	    }
+
+	    var handler;
+
+	    if(this.wildcard) {
+	      handler = [];
+	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+	      searchListenerTree.call(this, handler, ns, this.listenerTree, 0);
+	    }
+	    else {
+	      handler = this._events[type];
+	    }
+
+	    if (typeof handler === 'function') {
+	      this.event = type;
+	      if (arguments.length === 1) {
+	        handler.call(this);
+	      }
+	      else if (arguments.length > 1)
+	        switch (arguments.length) {
+	          case 2:
+	            handler.call(this, arguments[1]);
+	            break;
+	          case 3:
+	            handler.call(this, arguments[1], arguments[2]);
+	            break;
+	          // slower
+	          default:
+	            var l = arguments.length;
+	            var args = new Array(l - 1);
+	            for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+	            handler.apply(this, args);
+	        }
+	      return true;
+	    }
+	    else if (handler) {
+	      var l = arguments.length;
+	      var args = new Array(l - 1);
+	      for (var i = 1; i < l; i++) args[i - 1] = arguments[i];
+
+	      var listeners = handler.slice();
+	      for (var i = 0, l = listeners.length; i < l; i++) {
+	        this.event = type;
+	        listeners[i].apply(this, args);
+	      }
+	      return (listeners.length > 0) || !!this._all;
+	    }
+	    else {
+	      return !!this._all;
+	    }
+
+	  };
+
+	  EventEmitter.prototype.on = function(type, listener) {
+
+	    if (typeof type === 'function') {
+	      this.onAny(type);
+	      return this;
+	    }
+
+	    if (typeof listener !== 'function') {
+	      throw new Error('on only accepts instances of Function');
+	    }
+	    this._events || init.call(this);
+
+	    // To avoid recursion in the case that type == "newListeners"! Before
+	    // adding it to the listeners, first emit "newListeners".
+	    this.emit('newListener', type, listener);
+
+	    if(this.wildcard) {
+	      growListenerTree.call(this, type, listener);
+	      return this;
+	    }
+
+	    if (!this._events[type]) {
+	      // Optimize the case of one listener. Don't need the extra array object.
+	      this._events[type] = listener;
+	    }
+	    else if(typeof this._events[type] === 'function') {
+	      // Adding the second element, need to change to array.
+	      this._events[type] = [this._events[type], listener];
+	    }
+	    else if (isArray(this._events[type])) {
+	      // If we've already got an array, just append.
+	      this._events[type].push(listener);
+
+	      // Check for listener leak
+	      if (!this._events[type].warned) {
+
+	        var m = defaultMaxListeners;
+
+	        if (typeof this._events.maxListeners !== 'undefined') {
+	          m = this._events.maxListeners;
+	        }
+
+	        if (m > 0 && this._events[type].length > m) {
+
+	          this._events[type].warned = true;
+	          console.error('(node) warning: possible EventEmitter memory ' +
+	                        'leak detected. %d listeners added. ' +
+	                        'Use emitter.setMaxListeners() to increase limit.',
+	                        this._events[type].length);
+	          console.trace();
+	        }
+	      }
+	    }
+	    return this;
+	  };
+
+	  EventEmitter.prototype.onAny = function(fn) {
+
+	    if (typeof fn !== 'function') {
+	      throw new Error('onAny only accepts instances of Function');
+	    }
+
+	    if(!this._all) {
+	      this._all = [];
+	    }
+
+	    // Add the function to the event listener collection.
+	    this._all.push(fn);
+	    return this;
+	  };
+
+	  EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+	  EventEmitter.prototype.off = function(type, listener) {
+	    if (typeof listener !== 'function') {
+	      throw new Error('removeListener only takes instances of Function');
+	    }
+
+	    var handlers,leafs=[];
+
+	    if(this.wildcard) {
+	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+	      leafs = searchListenerTree.call(this, null, ns, this.listenerTree, 0);
+	    }
+	    else {
+	      // does not use listeners(), so no side effect of creating _events[type]
+	      if (!this._events[type]) return this;
+	      handlers = this._events[type];
+	      leafs.push({_listeners:handlers});
+	    }
+
+	    for (var iLeaf=0; iLeaf<leafs.length; iLeaf++) {
+	      var leaf = leafs[iLeaf];
+	      handlers = leaf._listeners;
+	      if (isArray(handlers)) {
+
+	        var position = -1;
+
+	        for (var i = 0, length = handlers.length; i < length; i++) {
+	          if (handlers[i] === listener ||
+	            (handlers[i].listener && handlers[i].listener === listener) ||
+	            (handlers[i]._origin && handlers[i]._origin === listener)) {
+	            position = i;
+	            break;
+	          }
+	        }
+
+	        if (position < 0) {
+	          continue;
+	        }
+
+	        if(this.wildcard) {
+	          leaf._listeners.splice(position, 1);
+	        }
+	        else {
+	          this._events[type].splice(position, 1);
+	        }
+
+	        if (handlers.length === 0) {
+	          if(this.wildcard) {
+	            delete leaf._listeners;
+	          }
+	          else {
+	            delete this._events[type];
+	          }
+	        }
+	        return this;
+	      }
+	      else if (handlers === listener ||
+	        (handlers.listener && handlers.listener === listener) ||
+	        (handlers._origin && handlers._origin === listener)) {
+	        if(this.wildcard) {
+	          delete leaf._listeners;
+	        }
+	        else {
+	          delete this._events[type];
+	        }
+	      }
+	    }
+
+	    return this;
+	  };
+
+	  EventEmitter.prototype.offAny = function(fn) {
+	    var i = 0, l = 0, fns;
+	    if (fn && this._all && this._all.length > 0) {
+	      fns = this._all;
+	      for(i = 0, l = fns.length; i < l; i++) {
+	        if(fn === fns[i]) {
+	          fns.splice(i, 1);
+	          return this;
+	        }
+	      }
+	    } else {
+	      this._all = [];
+	    }
+	    return this;
+	  };
+
+	  EventEmitter.prototype.removeListener = EventEmitter.prototype.off;
+
+	  EventEmitter.prototype.removeAllListeners = function(type) {
+	    if (arguments.length === 0) {
+	      !this._events || init.call(this);
+	      return this;
+	    }
+
+	    if(this.wildcard) {
+	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+	      var leafs = searchListenerTree.call(this, null, ns, this.listenerTree, 0);
+
+	      for (var iLeaf=0; iLeaf<leafs.length; iLeaf++) {
+	        var leaf = leafs[iLeaf];
+	        leaf._listeners = null;
+	      }
+	    }
+	    else {
+	      if (!this._events[type]) return this;
+	      this._events[type] = null;
+	    }
+	    return this;
+	  };
+
+	  EventEmitter.prototype.listeners = function(type) {
+	    if(this.wildcard) {
+	      var handlers = [];
+	      var ns = typeof type === 'string' ? type.split(this.delimiter) : type.slice();
+	      searchListenerTree.call(this, handlers, ns, this.listenerTree, 0);
+	      return handlers;
+	    }
+
+	    this._events || init.call(this);
+
+	    if (!this._events[type]) this._events[type] = [];
+	    if (!isArray(this._events[type])) {
+	      this._events[type] = [this._events[type]];
+	    }
+	    return this._events[type];
+	  };
+
+	  EventEmitter.prototype.listenersAny = function() {
+
+	    if(this._all) {
+	      return this._all;
+	    }
+	    else {
+	      return [];
+	    }
+
+	  };
+
+	  if (true) {
+	     // AMD. Register as an anonymous module.
+	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	      return EventEmitter;
+	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  } else if (typeof exports === 'object') {
+	    // CommonJS
+	    exports.EventEmitter2 = EventEmitter;
+	  }
+	  else {
+	    // Browser global.
+	    window.EventEmitter2 = EventEmitter;
+	  }
+	}();
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _libGzip = __webpack_require__(4);
+
+	var TesselRecorder = (function () {
+	  function TesselRecorder(tesselContext) {
+	    var _this = this;
+
+	    _classCallCheck(this, TesselRecorder);
+
+	    this.context = tesselContext;
+	    this.recording = false;
+	    this.stateRecords = undefined;
+
+	    this.replaying = false;
+
+	    // Add listener
+	    this.context._internal[1].on('update', function () {
+	      if (_this.recording == true) {
+	        _this.addRecord(_this.context.internalData);
+	      }
+	    });
+	  }
+
+	  _createClass(TesselRecorder, [{
+	    key: 'isRecording',
+	    value: function isRecording() {
+	      return this.recording;
+	    }
+	  }, {
+	    key: 'isReplaying',
+	    value: function isReplaying() {
+	      return this.replaying;
+	    }
+	  }, {
+	    key: 'startRecording',
+	    value: function startRecording() {
+	      console.debug("Start recording");
+	      this.recording = true;
+	      this.stateRecords = [];
+
+	      var currentTesselState = this.context.get();
+	      this.addRecord(currentTesselState);
+	    }
+	  }, {
+	    key: 'addRecord',
+	    value: function addRecord(state) {
+	      console.debug("Adding record", state);
+
+	      this.stateRecords.push({
+	        time: Date.now(),
+	        state: state
+	      });
+	    }
+	  }, {
+	    key: 'stopRecording',
+	    value: function stopRecording() {
+	      this.recording = false;
+	      // Remove listener
+	      this.context._internal[1].off('update', this._listenContext);
+	    }
+	  }, {
+	    key: 'replayStateRecord',
+	    value: function replayStateRecord(record) {
+	      this.context.set(record.state);
+	    }
+	  }, {
+	    key: 'step',
+	    value: function step(_step) {
+	      this.replayStateRecord(this.stateRecords[_step]);
+	    }
+	  }, {
+	    key: 'replay',
+	    value: function replay(speedFactor) {
+	      if (!this.stateRecords || this.stateRecords.length < 1) {
+	        console.error("At least 2 records are needed to replay");
+	        return;
+	      }
+
+	      try {
+	        this.replaying = true;
+	        var speedFactor = speedFactor || 1;
+	        var firstRecord = this.stateRecords[0];
+	        var lastRecord = this.stateRecords[this.stateRecords.length - 1];
+	        var totalRecordTime = lastRecord.time - firstRecord.time;
+
+	        var records = this.stateRecords.map(function (record) {
+	          // How much time after the beginning this record was added
+	          var startOffset = record.time - firstRecord.time;
+	          return {
+	            record: record,
+	            offset: startOffset
+	          };
+	        });
+
+	        // The current time is actually affected by the speed factor
+	        var currentReplayTime = 0;
+	        var currentRecordIndex = 0;
+	        var tickPace = 10; // TODO which value to choose?
+	        var replayInterval = setInterval((function () {
+	          this.replayStateRecord(records[currentRecordIndex].record);
+	          var hasNextRecord = records.length > currentRecordIndex + 1;
+	          // TODO create replay widget and send events to this widget
+	          if (hasNextRecord) {
+	            var nextRecord = records[currentRecordIndex + 1];
+	            var isTimeToPlayNextRecord = nextRecord.offset <= currentReplayTime;
+	            if (isTimeToPlayNextRecord) {
+	              currentRecordIndex = currentRecordIndex + 1;
+	              console.debug("Playing to next record");
+	            }
+	            currentReplayTime = currentReplayTime + tickPace * speedFactor;
+	          } else {
+	            console.debug("End of replay");
+	            clearInterval(replayInterval);
+	          }
+	        }).bind(this), tickPace);
+	      } catch (e) {
+	        console.error("Error during replay of state records", this.stateRecords, e);
+	        console.error(e.stack);
+	      } finally {
+	        this.replaying = false;
+	      }
+	    }
+	  }, {
+	    key: 'dehydrate',
+	    value: function dehydrate() {
+	      return (0, _libGzip.compress)(JSON.stringify(this.stateRecords));
+	    }
+	  }, {
+	    key: 'rehydrate',
+	    value: function rehydrate(data) {
+	      this.stateRecords = JSON.parse((0, _libGzip.uncompress)(data));
+	    }
+	  }]);
+
+	  return TesselRecorder;
+	})();
+
+	exports.TesselRecorder = TesselRecorder;
 
 /***/ }
 /******/ ])

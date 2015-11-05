@@ -27,7 +27,7 @@ module.exports = function (config) {
       devtool: '#inline-source-map',
       module: {
         loaders: [
-          { test: /\.(js|jsx)$/, loader: 'babel-loader?stage=0', exclude: /node_modules/ }
+          { test: /\.(js|jsx)$/, loader: 'babel', exclude: /node_modules/ }
         ]
       },
       plugins: [
