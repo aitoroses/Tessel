@@ -1,6 +1,6 @@
 {
   "name": "tessel-js",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Mix functional reactive programming with immutable cursors for handling application state.",
   "repository": "https://www.github.com/aitoroses/Tessel",
   "main": "./src/tessel.js",
@@ -33,7 +33,7 @@
     "webpack-dev-server": "1.12.1"
   },
   "dependencies": {
-    "bluebird": "3.0.5",
+    "bluebird": "2.9.24",
     "js-csp": "^0.5.0",
     "superagent": "^1.4.0",
     "superagent-bluebird-promise": "2.1.0",
