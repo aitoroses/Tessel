@@ -1,9 +1,9 @@
 {
   "name": "tessel-js",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Mix functional reactive programming with immutable cursors for handling application state.",
   "repository": "https://www.github.com/aitoroses/Tessel",
-  "main": "./src/tessel.js",
+  "main": "build/global/tessel.js",
   "scripts": {
     "build-global": "rm -rf build/global && NODE_ENV=production webpack src/index.js build/global/tessel.js && NODE_ENV=production COMPRESS=1 webpack src/index.js build/global/tessel.min.js && echo \"gzipped, the global build is `gzip -c build/global/tessel.min.js | wc -c` bytes\"",
     "test": "./node_modules/.bin/karma start"
